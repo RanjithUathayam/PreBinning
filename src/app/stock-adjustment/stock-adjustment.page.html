@@ -1,0 +1,135 @@
+<ion-header>
+  <ion-toolbar>
+      <app-pageheader [title]="'STOCK ADJUSTMENT'"></app-pageheader>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="container-fluid p-2">
+      <div class="row">
+          <div class="col-12">
+              <div class="col-12 order-2 order-sm-3 p-0 mt-2">
+                  <!-- Scan Bin ID Section -->
+                  <div *ngIf="!isItemCodeVisible">
+                      <div class="d-flex align-items-center">
+                          <label class="text-color font-weight-bold">Bin Id:</label>
+                      </div>
+                      <div class="scan_bin pt-3 col-12 pl-0">
+                          <div class="input-border-custom input_style">
+                              <input 
+                                  id="binIdInput"
+                                  #binIdInput
+                                  class="form-control input-border-custom smaller-text"
+                                  placeholder="Scan Bin ID"
+                                  style="--placeholder-font-size: 1.1em;"
+                                  [(ngModel)]="binId"
+                                  (keydown.enter)="onBinIdScanned()" />
+                          </div>
+                          <div>
+                              <span class="input-icon input_style1">
+                                  <ion-icon name="qr-code" class="qrcode-icon qr_icon"></ion-icon>
+                              </span>
+                          </div>
+                      </div>
+                  </div>
+                 
+                  <!-- Scan Item Code Section -->
+                  <div *ngIf="isItemCodeVisible">
+                      <div class="card1 mt-2 position-relative" *ngIf="isItemCodeVisible">
+                          <div class="card2 p-1">
+                          <div class="d-flex justify-content-between align-items-center">
+                              <div class="row">
+                              <div class="col-md-6 col-sm-6 col-6 d-flex align-items-center no-wrap">
+                                  <label class="text-color1 mb-2">Bin Id : </label>
+                                  <label class="text-value-color mb-2 font-weight-bold">{{ binId }}</label>
+                              </div>
+                              <div class="col-md-6 col-sm-6 col-6 d-flex align-items-center no-wrap p-0">
+                                  <label class="text-color1 mb-2">Qty : </label>
+                                  <label class="text-value-color mb-2 font-weight-bold">{{ getTotalScannedQty()}} / {{ getTotalQty() }}</label>
+                              </div>
+                              <div class="col-md-6 col-sm-6 col-12 d-flex align-items-center no-wrap">
+                                  <label class="text-color1 mb-0 mb-2 mb-md-0">Item Group : </label>
+                                  <label class="text-value-color mb-2 mb-md-0 font-weight-bold"> {{ grndataArrBin[0]?.ItemGroup || '' }}</label>
+                              </div>
+                              <div class="col-md-6 col-sm-6 col-6 d-flex align-items-center no-wrap">
+                                  <label class="text-color1 mb-2">Bin Capacity : </label>
+                                  <label class="text-value-color mb-2 mb-md-0 font-weight-bold">{{ grndataArrBin[0]?.BinCapacity || '' }}</label>
+                              </div>
+                              <!-- <div class="col-md-6 col-sm-6 col-6 d-flex align-items-center no-wrap p-md-0">
+                                  <label class="text-color1 mb-0 mb-2 mb-md-0">GRN No : </label>
+                                  <label class="text-value-color mb-2 mb-md-0 font-weight-bold">{{ grndataArrBin[0]?.GRNNo || '' }}</label>
+                              </div> -->
+                             
+                              </div>
+                          
+                          </div>     
+                          </div>
+                      </div>
+                  
+                      <div class="d-flex align-items-center justify-content-between mt-3">
+                          <label class="text-color font-weight-bold">Item Code:</label>
+                          <div class="col-12 d-flex align-items-center justify-content-center">
+                              <button class="btn btn-style" (click)="handleSubmit()">Submit</button>
+                          </div>
+                          <!-- <div class="col-2 d-flex align-items-center justify-content-end">
+                              <span class="icon-container" (click)="convertScanToBinId()">
+                                  <ion-icon name="refresh" class="header-icon"></ion-icon> 
+                              </span>
+                          </div> -->
+                      </div>
+                      <div class="scan_bin pt-3 col-12 pl-0">
+                          <div class="input-border-custom input_style">
+                              <input 
+                                  id="itemCodeInput"
+                                  #itemCodeInput
+                                  class="form-control input-border-custom smaller-text"
+                                  style="--placeholder-font-size: 1.1em;"
+                                  placeholder="Scan Item Code"
+                                  [(ngModel)]="itemCode"
+                                  (keyup.enter)="addItem()" />
+                          </div>
+                          <div>
+                              <span class="input-icon input_style1">
+                                  <ion-icon name="qr-code" class="qrcode-icon qr_icon"></ion-icon>
+                              </span>
+                          </div>
+                      </div>
+                  </div> 
+              </div>
+
+              <div class="scrollbar-container mt-2">
+                  <div class="item_cardview position-relative">
+                      <div class="scrollable-content" #scrollContent>
+                      <div class="mb-3">
+                          <ng-container *ngFor="let item of grndataArr; let i = index">
+                          <div class="mb-3" *ngIf="item" >
+                              <div class="itemcard2 p-1"  >
+                                  <div class="row">
+
+                                  <div class="col-3 d-flex justify-content-center p-0" >
+                                 
+                                  </div>
+                                  <div class="col-9 p-0 "  > 
+                                  <div class="col-md-7 col-sm-12 col-12 p-0">
+                                      <label class="text-color1">Item Code : </label>
+                                      <label class="text-value-color font-weight-bold">{{ item.ItemCode }}</label>
+                                  </div> 
+
+                                  <div class="col-md-6 col-sm-12 col-12 p-0">
+                                      <label class="text-color1">Adjusted Qty /Avl Qty : </label>
+                                      <label class="text-value-color font-weight-bold">{{item.ScannedQty || '0'}}/{{item.Quantity || '0'}}</label>
+                                  </div> 
+                                                              
+                                  </div>
+                              </div>
+                              </div>
+                          </div>
+                          </ng-container>
+                      </div>
+                      </div>
+                      <div class="scroll-arrow scroll-down mr-3" (click)="scrollUp()" *ngIf="grndataArr.length > 1">&#9650;</div>
+                  </div>   
+              </div>
+          </div>
+      </div>
+  </div>
+</ion-content>

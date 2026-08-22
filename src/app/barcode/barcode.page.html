@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>barcode</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div style="text-align: center;">
+    <button (click)="openCam()">Open Scanner</button>
+    <button (click)="stopCam()">Stop Scanner</button>
+    <div id="arrange">
+    <div id="reader" style="width: 500px; display: none;"></div>
+    <div id="show" style="display: none;">
+    </div>
+      <h4 style="color:white">Scanned Result</h4>
+      <p style="color: white;" id="result"></p>
+    </div>
+</div>
+</ion-content>

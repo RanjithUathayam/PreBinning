@@ -1,0 +1,60 @@
+<div class="global-container login-page d-flex flex-column-reverse flex-sm-row" #mainContent>
+  <div class="m-3">
+    <img src="../../assets/images/Asset 22.png" />
+  </div>
+  <div class="login-box">
+    <div class="mt-5">
+      <h3 class="default-color login-title text-center">MATERIAL MOVEMENT MANAGER</h3>
+    </div>
+    <div class="card login-card">
+      <div class="card-body login-card-body">
+        <form>
+          <div class="row p-3">
+            <div class="col-12 input-col">
+              <div class="inputWithIcon">
+                <input 
+                  class="input-text" 
+                  type="text" 
+                  [placeholder]="isError && !userName ? 'Username is Required' : 'Username'" 
+                  [(ngModel)]="userName"
+                  [ngModelOptions]="{standalone: true}"
+                  [ngClass]="{'has-error': isError && !userName}">
+                <ion-icon name="person-circle-outline" size="large"></ion-icon>
+              </div>
+            </div>
+          </div>
+          <div class="row p-3">
+            <div class="col-12 input-col">
+              <div class="inputWithIcon">
+                <input 
+                class="input-text" 
+  [type]="isPasswordVisible ? 'text' : 'password'" 
+  [placeholder]="isError && !pwd ? 'Password is Required' : 'Password'" 
+  [(ngModel)]="pwd"
+  [ngModelOptions]="{standalone: true}"
+  [ngClass]="{'has-error': isError && !pwd}">
+
+                <ion-icon name="shield-half-outline" size="large"></ion-icon>
+                <ion-icon [name]="isPasswordVisible ? 'eye-off' : 'eye'" size="large"
+                  (click)="togglePasswordVisibility()" class="eye-icon"></ion-icon>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 d-flex justify-content-center" style="column-gap: 20px;">
+              <button type="submit" class="btn btn-lg login-btn default-bgcolor text-white d-flex"
+                (click)="onLoginIn()">LOGIN 
+                <ion-icon name="arrow-forward-circle-outline" size="large" class="ml-3"></ion-icon>
+              </button>
+              <button type="submit" class="btn btn-lg login-btn default-bgcolor text-white d-flex" 
+                (click)="exit()">EXIT 
+                <ion-icon name="close-circle-outline" size="large" class="ml-3"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </form>
+        
+      </div>
+    </div>
+  </div>
+</div>

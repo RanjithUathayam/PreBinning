@@ -1,0 +1,151 @@
+.navbar {
+    background-color: #EFF7FA !important;
+}
+
+.circle {
+    border-radius: 5px;
+   // background-color: #14304d !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 4px;
+}
+
+.header-icon {
+    font-size: 40px;
+    color: #14304d !important;
+    padding: 4px;
+}
+
+.app-heading {
+    color: #14304d;
+    font-size: 30px;
+    font-weight: 600;
+}
+@media screen and (min-width: 500px) and (max-width: 550px) {
+    .app-heading {
+        font-size: 16px;
+    }
+
+    .logo-img {
+        width: 90px;
+    }
+
+    .circle {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media screen and (min-width: 550px) and (max-width: 612px) {
+    .app-heading {
+        font-size: 18px;
+    }
+
+    .logo-img {
+        width: 90px;
+    }
+}
+
+@media screen and (min-width: 612px) and (max-width: 800px) {
+    .app-heading {
+        font-size: 22px;
+    }
+
+    .logo-img {
+        width: 90px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .app-heading {
+        font-size: 22px;
+    }
+
+    .logo-img {
+        width: 90px;
+    }
+}
+
+
+::ng-deep .custom-alert .alert-wrapper {
+    border-radius: 20px !important;
+    padding: 16px 8px !important;
+  }
+  
+  
+  ::ng-deep .custom-alert .alert-header {
+    text-align: center !important;
+    color: red !important;
+  }
+  
+  
+  
+  ::ng-deep .custom-alert .alert-button-group {
+    justify-content: center !important;
+  }
+  
+  
+  ::ng-deep .custom-alert .alert-button-confirm {
+    background-color: #14304d !important;
+    border-radius: 25px !important;
+    color: white !important;
+    padding: 15px 40px !important;
+    margin: 20px;
+    font-size: 14px !important;
+  }
+  
+  .custom-alert .alert-button-confirm .button-inner {
+    font-size: 30px !important;
+  }
+  
+  ::ng-deep .alert-title {
+    color: #14304d !important;
+    font-size: 21px !important;
+    font-weight: 500 !important;
+    text-align: center !important;
+  }
+  
+  ::ng-deep .alert-button-inner {
+    display: flex !important;
+    -ms-flex-pack: end !important;
+    justify-content: flex-end !important;
+    font-size: 25px !important;
+  }
+  
+  ::ng-deep .alert-sub-title.sc-ion-alert-md {
+    font-size: 16px;
+    color: #14304d;
+  }
+  
+  ::ng-deep .custom-dropdown {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+  }
+  
+  ::ng-deep .custom-dropdown option {
+    padding: 10px;
+  }
+  
+  
+  ::ng-deep .custom-alert .alert-button-group {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  ::ng-deep .custom-alert .alert-button-inline {
+    flex: 1;
+    margin: 0 5px;
+    background-color: #14304d !important;
+    border-radius: 25px !important;
+    color: white !important;
+    padding: 15px 28px !important;
+    margin: 0 10px !important;
+
+    font-size: 14px !important;
+  }

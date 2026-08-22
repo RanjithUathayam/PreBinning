@@ -1,0 +1,208 @@
+ion-content{
+    --ion-background-color:white;
+}
+
+.text-color{
+   color: #14304d;
+   font-size: larger;
+  
+}
+
+.text-color1{
+  color: #14304d;
+  font-size: larger;
+ 
+}
+
+.text-color1 {
+  color: #14304d;
+  font-size: larger;
+}
+
+@media (max-width: 767px) {
+  .text-color1 {
+      font-size: medium; /* Adjust the size as needed */
+  }
+}
+  .no-wrap {
+    white-space: nowrap;
+  }
+
+.grn-text{
+  font-size: 19px;
+}
+
+.expanded-content-container {
+  max-height: 33vh; /* Approximately equivalent to 150px */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+
+.circle {
+  border-radius: 5px;
+  background-color: #14304d !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px !important;
+}
+
+.header-icon {
+  font-size: 28px;
+  color: white !important;
+  padding: 4px;
+}
+
+.header-icon {
+  margin-left: auto;
+}
+
+.card-body{
+  padding: 0 !important;
+}
+
+.container-fluid{
+  font-variant: small-caps !important;
+}
+
+.btn{
+  padding: 0px;
+}
+
+.btn .badge {
+  display: inline-block;
+  font-size: 1em;
+  padding: 0.25em 0.4em;
+}
+
+@media (max-width: 576px) {
+  .btn .badge {
+      margin:  0.45em 2.2em ;
+  }
+}
+
+@media (max-width: 576px) {
+  .btn-responsive .btn-text {
+      display: block;
+  }
+  .btn-responsive .badge {
+      display: block;
+      margin-top: 5px;
+  }
+}
+
+@media (min-width: 577px) {
+  .btn-responsive .btn-text {
+      display: inline;
+  }
+  .btn-responsive .badge {
+      display: inline-block;
+      margin-left: 5px;
+  }
+}
+.text-md-large {
+  font-size: 1rem; /* Default font size for smaller devices */
+  margin: 0px;
+}
+
+@media (min-width: 768px) { /* Bootstrap's breakpoint for medium devices */
+  .text-md-large {
+      font-size: 1.25rem; /* Larger font size for medium and larger devices */
+  }
+}
+
+.expanded-content {
+  padding: 0.5rem 0.5rem 0rem 0.5rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+    border: 2px solid #14304d;
+}
+
+.card1 {
+  //max-width: 300px;
+  display: flex;
+  justify-content: space-between;
+  max-width: 1005px;
+  // padding: 2px 17px;
+  border: 1px solid rgb(102 102 102 / 25%);
+  border-radius: 6px;
+  background-color:  #1f96b8;
+  box-shadow: 2px 2px 2px 0px #14304d !important;
+}
+
+.card1 {
+  position: relative;
+}
+
+.card2 {
+  border: 1px solid rgb(102 102 102 / 25%);
+  border-radius: 4px 115px 4px 4px;
+  background-color: white !important;
+  width: 100%;
+  padding: 10px;
+}
+
+.circles-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-1, .circle-2, .circle-3 {
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle-1 {
+  width: 40px;
+  height: 40px;
+  border: 2px solid white;
+}
+
+.circle-2 {
+  width: 27px;
+  height: 27px;
+  z-index: 100;
+}
+
+.circle-3 {
+  width: 20px;
+  height: 20px;
+  border: 2px solid white;
+  z-index: 100;
+}
+
+.badge-round {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+}
+
+.bg-success {
+  background-color: green !important;
+}
+
+.bg-warning {
+  background-color: yellow !important;
+}
+
+.bg-danger {
+  background-color: red !important;
+}
+
+
+
+
+
+
+

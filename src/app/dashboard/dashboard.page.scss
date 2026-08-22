@@ -1,0 +1,63 @@
+.card-body {
+    padding: 5px;
+}
+
+.card {
+    margin-top: 200px;
+}
+
+.card {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    margin-right: 2%;
+    margin-left: 2%;
+}
+
+.card {
+    margin-top: 20px;
+}
+
+
+.responsive-image {
+    width: 15vw !important;
+}
+
+.responsive-image {
+    // width: 33%;
+    width: 10vw;
+}
+
+.responsive-text .break {
+    display: inline;
+}
+
+.responsive-text .break {
+    display: block;
+}
+
+
+.card-title {
+    text-align: center;
+}
+
+
+ion-content {
+    --ion-background-color: white;
+}
+
+@media (max-width: 767px) {
+    .responsive-image {
+        width: 15vw !important;
+    }
+
+    .responsive-text .break {
+        display: inline;
+    }
+}
+
+@media (min-width: 768px) {
+    .responsive-image {
+        
+        width: 10vw !important;
+    }
+}

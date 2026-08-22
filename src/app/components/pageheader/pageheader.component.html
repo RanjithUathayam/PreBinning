@@ -1,0 +1,28 @@
+<div class="navbar">
+  <div class="toolbar-wrapper">
+    <!-- <ion-back-button class="custom-back-button" (click)="movehome()"></ion-back-button> -->
+    <div class="home-icon-end circle  ml-2 mr-2" (click)="movehome()">
+      <ion-icon name="home" class="header-icon"></ion-icon>
+    </div>
+    <div class="home-icon-start circle ml-2">
+      <a > <img class="logo-img"
+        src="../../../assets/images/cm-logo.png" /> </a>
+    </div>
+    <ion-toolbar>
+      <div class="toolbar-container">
+        <ion-title class="page-title app-heading p-0 visible-text" style="color:#14304d;">
+          <ng-container *ngIf="title.split(' ').length > 1; else singleWord">
+            {{ title.split(' ')[0] }}<br>{{ title.split(' ').slice(1).join(' ') }}
+          </ng-container>
+          <ng-template #singleWord>
+            {{ title }}
+          </ng-template>
+        </ion-title>
+      </div>
+    </ion-toolbar>
+    
+    <div class="logout-icon circle mr-2" (click)="movelogin()">
+      <ion-icon name="power" class="header-icon"></ion-icon>
+    </div>
+  </div>
+</div>

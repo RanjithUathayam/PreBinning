@@ -1,0 +1,134 @@
+<ion-header>
+    <ion-toolbar>
+        <app-pageheader [title]="'STATUS'"></app-pageheader>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div class="container-fluid mt-md-1 pt-md-1 mt-1 pt-2">
+        <div class="mt-1">
+            <div>
+                <div class="row">
+                    <div class="col-12"></div>
+                </div>
+                <div class="row">
+                    <div class="col-10 col-sm-2 order-1 order-sm-1 mb-2">
+                        <span class="text-color grn-text no-wrap ml-1">Grn Details</span>
+                    </div>
+                    <div class="col-2 col-sm-1 order-2 order-sm-5">
+                        <!-- Dropdown content here -->
+                    </div>
+                    <div class="col-4 col-sm-3 order-3 order-sm-2 p-0">
+                        <div class="d-flex flex-column align-items-center">
+                            <span class="btn-text text-md-large ml-2">Completed</span>
+                            <span class="badge badge-round bg-success">&nbsp;&nbsp;</span>
+                        </div>
+                    </div>
+                    <div class="col-4 col-sm-3 order-4 order-sm-3 p-0">
+                        <div class="d-flex flex-column align-items-center">
+                            <span class="btn-text no-wrap text-md-large">In Progress</span>
+                            <span class="badge badge-round bg-warning">&nbsp;&nbsp;</span>
+                        </div>
+                    </div>
+                    <div class="col-4 col-sm-3 order-5 order-sm-4 p-0">
+                        <div class="d-flex flex-column align-items-center">
+                            <span class="btn-text text-md-large">Pending</span>
+                            <span class="badge badge-round bg-danger">&nbsp;&nbsp;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="card1 mt-2" *ngFor="let item of filteredArray">
+                    <div class="circles-container mb-md-4">
+                        <div class="circle-1" [ngStyle]="{ 'background-color': getBackgroundColor(item.GRNStatus) }">
+                            <div class="circle-2" [ngStyle]="{ 'background-color': getInnerCircleColor(item.GRNStatus) }">
+                                <div class="circle-3" [ngStyle]="{ 'background-color': getBackgroundColor(item.GRNStatus) }"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--
+                    [class.card-red-corner]="item.GRNStatus === 'Pending'"
+                    [class.card-green-corner]="item.GRNStatus === 'Completed'"
+                    [class.card-yellow-corner]="item.GRNStatus === 'InProgress'"
+                    -->
+                    <div class="card2" (click)="toggleExpand(item); getGRNDetails(item.GRNNo)">
+                        <div class="row">
+                            <div class="col-10">
+                                <div class="row">
+                                    <!--
+                                    <div class="col-md-12 col-12 d-flex align-items-center no-wrap">
+                                        <label class="text-color mr-2">&nbsp;</label>
+                                        <label class="text-color font-weight-bold">&nbsp;</label>
+                                    </div>
+                                    -->
+                                    <div class="col-md-6 col-12 d-flex align-items-center no-wrap">
+                                        <label class="text-color mr-2">Grn No :</label>
+                                        <label class="text-color font-weight-bold">{{ item.GRNNo }}</label>
+                                    </div>
+                                    <!-- <div class="col-md-6 col-12 d-flex align-items-center no-wrap">
+                                        <label class="text-color mr-2">Binned Qty :</label>
+                                        <label class="text-color font-weight-bold">{{ item.binnedQty }}</label>
+                                    </div> -->
+                                    <div class="col-md-6 col-12 d-flex align-items-center no-wrap">
+                                        <label class="text-color mr-2">GRN Quantity:</label>
+                                        <label class="text-color font-weight-bold">{{ item.reqQty }}</label>
+                                    </div>
+                                    <div class="col-md-6 col-12 d-flex align-items-center no-wrap">
+                                        <label class="text-color mr-2">Items :</label>
+                                        <label class="text-color font-weight-bold">{{ item.item.length }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2 d-flex align-items-end justify-content-end mt-md-5">
+                                <div class="circle mr-1">
+                                    <ion-icon [name]="expandedItem === item ? 'arrow-up' : 'arrow-down'" class="header-icon"></ion-icon>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div *ngIf="expandedItem === item" class="expanded-content-container">
+                            <div class="commdiv" *ngFor="let data of grndataArr">
+                                <div class="card mb-3 expanded-content">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 d-flex align-items-center no-wrap">
+                                            <label class="text-color mr-2">Item Code :</label>
+                                            <label class="text-color">{{ data.ItemCode }}</label>
+                                        </div>
+                                        <div class="col-12 col-sm-6 d-flex align-items-center no-wrap">
+                                            <label class="text-color mr-2">Item Group :</label>
+                                            <label class="text-color pl-sm-4 pl-2">{{ data.ItemGroup }}</label>
+                                        </div>
+                                        <div class="col-12 col-sm-6 d-flex align-items-center no-wrap">
+                                            <label class="text-color mr-2">Item Name :</label>
+                                            <label class="text-color pl-sm-4 pl-2">{{ data.ItemName }}</label>
+                                        </div>
+                                        <div class="col-12 col-sm-6 d-flex align-items-center no-wrap">
+                                            <label class="text-color mr-2">Quantity:</label>
+                                            <label class="text-color pl-sm-4 pl-2">{{ data.Quantity }}</label>
+                                        </div>
+                                        <!-- <div class="col-12 col-sm-6 d-flex align-items-center no-wrap">
+                                            <label class="text-color mr-2">Binning Quantity:</label>
+                                            <label class="text-color pl-sm-4 pl-2">{{ data.Binning_Qty }}</label>
+                                        </div> -->
+                                        <div class="col-12 col-sm-6 d-flex align-items-center no-wrap">
+                                            <label class="text-color mr-2">Type:</label>
+                                            <label class="text-color pl-sm-4 pl-2">{{ data.Type }}</label>
+                                        </div>
+                                        <!-- <div class="col-12 col-sm-6 d-flex align-items-center no-wrap">
+                                            <label class="text-color  mr-2">Bin Capacity:</label>
+                                            <label class="text-color pl-sm-4 pl-2">{{ data.BinCapacity }}</label>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+    
+</ion-content>

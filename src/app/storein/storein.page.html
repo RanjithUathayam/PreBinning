@@ -1,0 +1,325 @@
+<ion-header>
+    <ion-toolbar>
+        <app-pageheader [title]="'PRE-BINNING'"></app-pageheader>
+    </ion-toolbar>
+</ion-header>
+    <ion-content>
+        <div class="container-fluid p-2">
+            <div class="row">
+                <div class="col-12">
+                    <div class="grn_no d-flex">
+                        <label class="text-color font-weight-bold mb-0 d-flex justify-content-center align-items-center">GRN No</label>
+                        <div class="input-group ml-2">
+                            <select class="form-select form-control custom-select pl-1 pr-0 py-1 mr-2" [(ngModel)]="selectedGrnNo" [disabled]="isGrnSelected"
+                            aria-label="Default select example" (input)="selectedGrnumber($event)">
+                            <option value="" disabled selected></option>
+                            <option *ngFor="let data of grnlist" [value]="data">{{ data }}</option>
+                            </select>
+                            <a class="custom-link no-wrap ml-auto text-end refresh_icon ml-2">
+                            <div class="icon-container">
+                                <ion-icon name="refresh" class="header-icon" (click)="grnrefresh()"></ion-icon>
+                            </div>
+                            </a>
+                        </div>
+                    </div>
+
+                        <div class="col-12 order-2 order-sm-3 p-0 mt-2" *ngIf="isInputFilled">
+                        <div class="d-flex align-items-center">
+                            <label class="text-color font-weight-bold">GRN Details</label>
+                        </div>          
+                        <div class="card1 mt-2 position-relative">
+                            <div class="card2 p-1">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="row">
+                                <div class="col-md-6 col-sm-6 col-12 d-flex align-items-center no-wrap">
+                                    <label class="text-color1 mb-2">GRN No : </label>
+                                    <label class="text-value-color mb-2 font-weight-bold">{{ grndataArr[0]?.GRNNo }}</label>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-12 d-flex align-items-center no-wrap p-0">
+                                    <label class="text-color1 mb-2">Type : </label>
+                                    <label class="text-value-color mb-2 font-weight-bold">{{ grndataArr[0]?.Type }}</label>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-12 d-flex align-items-center no-wrap">
+                                    <label class="text-color1 mb-0 mb-2 mb-md-0">GRN Quantity : </label>
+                                    <label class="text-value-color mb-2 mb-md-0 font-weight-bold">{{ calculateTotalQuantity() }}</label>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-6 d-flex align-items-center no-wrap p-md-0">
+                                    <label class="text-color1 mb-0 mb-2 mb-md-0">Binning Quantity : </label>
+                                    <label class="text-value-color mb-2 mb-md-0 font-weight-bold">{{ calculateTotalBinningQuantity() }}</label>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-6 d-flex align-items-center no-wrap p-md-0" style="display: flex; justify-content: end;">
+                                    <a *ngIf="isInputFilled" class="underline-link custom-link no-wrap  mb-2 mb-md-0" (click)="ShowViewDetails(true);">
+                                    View GRN Details
+                                    </a>
+                                </div>
+                                </div>
+                            
+                            </div>     
+                            </div>
+                        </div>
+                        </div>
+                        
+                        <div class="mt-2" *ngIf="scanbin">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-6 align-items-center no-wrap">
+                            <div>
+                                <label class="text-color mr-2  mb-2">Bin Id : </label>
+                                <label class="text-value-color mb-2 font-weight-bold">{{ binIdselect1 }}</label>
+                            </div>
+                            <div>
+                                <label class="text-color mr-2  mb-2">Bin Max Limit : </label>
+                                <label class="text-value-color mb-2 font-weight-bold">{{ maxLimit }}</label>
+                            </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-6 d-flex align-items-center no-wrap"  *ngIf="(itemDetails && isBinExists)"
+                            style="justify-content: space-evenly;">
+                            <div >
+                                <button class="btn btn-style" (click)="bincomplete()">Complete Bin</button>
+                            </div>              
+                            </div>
+                        </div>
+                        </div>
+                            
+                        <div class="scan_bin pt-3 col-12 pl-0" *ngIf="!deleteinputbin">
+                        <div class="input-border-custom input_style">
+                            <input (keyup.enter)="SelectBinId($event, inputField)" #inputField [disabled]="!isGrnSelected" id="ip"
+                            class="form-control input-border-custom smaller-text"
+                            [placeholder]="binIdselect1 ? 'scan item to add' : 'scan bin id'"
+                            style="--placeholder-font-size: 1.4em;" />
+                        </div>
+                        <!-- <button class="btn btn-style" (click)="changebin(this.binIdselect1)">Change Bin</button> -->
+                        <div>
+                            <span class="input-icon input_style1" (click)="isInputFilled && openModalAndCam('add')">
+                                <ion-icon name="qr-code" class="qrcode-icon qr_icon"></ion-icon>
+                            </span>
+                        </div>
+                        </div>
+                        
+                        <div class="scan_bin pt-3 col-12 pl-0" *ngIf="deleteinputbin">
+                        <div class="input-border-custom" style="position: relative; width: 100%;">
+                            <input (keyup.enter)="ScanItemDelete($event,inputdeleteField)" #inputdeleteField [disabled]="!isGrnSelected" id="ip1"
+                            class="form-control input-border-custom smaller-text" placeholder="scan item to delete" />
+                        </div>
+                        <div>
+                            <span class="input-icon input_style1" (click)="openModalAndCam('delete')">
+                            <ion-icon name="qr-code" class="qrcode-icon qr_icon"></ion-icon>
+                            </span>
+                        </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between p-2 mt-2" *ngIf="itemDetails">
+                        <label class="text-color font-weight-bold">Item Details</label>
+                        <!-- <div class="circle d-none" *ngIf="scanbinicon && binIdselect1" [ngStyle]="{ 'background-color': deleteinputbin ? 'rgba(0, 255, 0, 0.5)' : 'rgba(255, 0, 0, 0.5)' }" (click)="toggleDropdown()">
+                        <ng-container *ngIf="!deleteinputbin; else showPlusIcon">
+                            <ion-icon name="trash-outline" class="trash-icon"></ion-icon>
+                        </ng-container>
+                        <ng-template #showPlusIcon>
+                            <ion-icon name="add-outline" class="add-icon"></ion-icon>
+                        </ng-template>
+                        </div> -->
+                        
+                        </div>
+                </div>
+                <div class="scrollbar-container mt-2" *ngIf="isInputFilled">
+                    <div class="item_cardview position-relative">
+                        <div class="scrollable-content" #scrollContent>
+                        <div class="mb-3">
+                            <ng-container *ngFor="let item of grndataArr; let i = index">
+                            <div class="mb-3" *ngIf="item">
+                                <div class="itemcard2 p-1">
+                                <div class="row">
+                                    <div class="col-3 d-flex justify-content-center p-0">
+                                    <!-- <ng-container>
+                                        <img *ngIf="item.ItemGroup === 'SHIRT'" src="../../assets/images/shirt_original.png" style="height: 100px;" alt="Shirt">
+                                        <img *ngIf="item.ItemGroup === 'KURTA'" src="../../assets/images/longkurta.png" style="height: 100px;" alt="Kurta">
+                                        <img *ngIf="item.ItemGroup === 'Chudidhar'" src="../../assets/images/chudithar.png" style="height: 100px;" alt="Chudidhar" >
+                                        <img *ngIf="item.ItemGroup === 'KidsDhoti'" src="../../assets/images/kidsdhoti.png"  style="height: 100px;" alt="KidsDhoti">
+                                        <img *ngIf="item.ItemGroup === 'Lungi'" src="../../assets/images/lungi.png"  style="height: 100px;" alt="Lungi">
+                                        <img *ngIf="item.ItemGroup === 'Brazier'" src="../../assets/images/brazier.png"  style="height: 100px;" alt="Brazier">
+                                        <img *ngIf="item.ItemGroup === 'Pant'" src="../../assets/images/pant.png"  style="height: 100px;" alt="Pant">
+                                        
+                                        <img *ngIf="item.ItemGroup === 'Ethnics'" src="../../assets/images/ethnic-jacket.png"  style="height: 100px;" alt="Ethnics">
+                                        <img *ngIf="item.ItemGroup === 'Banian'" src="../../assets/images/banian_red.png"  style="height: 100px;" alt="Banian">
+                                        <img *ngIf="item.ItemGroup === 'Panchakacham'" src="../../assets/images/panchakacham.png"  style="height: 100px;" alt="Panchakacham">
+                                        <img *ngIf="item.ItemGroup === 'Boxer'" src="../../assets/images/trunks.png"  style="height: 100px;" alt="Boxer">
+                                        <img *ngIf="item.ItemGroup === 'Trunks'" src="../../assets/images/boxer.png"  style="height: 100px;" alt="Trunks">
+                                        <img *ngIf="item.ItemGroup === 'Brief'" src="../../assets/images/briefs.png"  style="height: 100px;" alt="Brief">
+                                        <img *ngIf="item.ItemGroup === 'Turban'" src="../../assets/images/turban.png"  style="height: 100px;" alt="Turban">
+                                        <img *ngIf="item.ItemGroup === 'Skirt'" src="../../assets/images/longkurta.png"  style="height: 100px;" alt="Skirt">
+                                        <img *ngIf="item.ItemGroup === 'Dhoti'" src="../../assets/images/dhioti.png"  style="height: 100px;" alt="Dhoti">
+                                        <img *ngIf="item.ItemGroup === 'Saree'" src="../../assets/images/saree4.png"  style="height: 100px;" alt="Saree">
+                                        <img *ngIf="item.ItemGroup === 'Panties'" src="../../assets/images/panties.png"  style="height: 100px;" alt="Panties">
+                                        <img *ngIf="item.ItemGroup === 'Camisole'" src="../../assets/images/camisole.png"  style="height: 100px;" alt="Camisole">
+                                        <img *ngIf="item.ItemGroup === 'SilkDhoti'" src="../../assets/images/silkdhoti.png"  style="height: 100px;" alt="Silk Dhoti">
+                                        <img *ngIf="item.ItemGroup === 'ShirtDhotiSet'" src="../../assets/images/shirtdhotiset.png"  style="height: 100px;" alt="ShirtDhotiSet">
+                                        <img *ngIf="item.ItemGroup === 'Tshirt'" src="../../assets/images/tshirt.png"  style="height: 100px;" alt="Tshirt">
+                                        <img *ngIf="item.ItemGroup === 'Fabrics'" src="../../assets/images/fabricsetoriginal.png"  style="height: 100px;" alt="Fabrics">
+                                    </ng-container> -->
+                                    </div>
+                                    <div class="col-9 p-0">
+                                    <div class="col-md-7 col-sm-12 col-12 p-0">
+
+                                        <label class="text-value-color font-weight-bold">{{ item.ItemName }}</label>
+                                    </div>
+                                    <div class="col-md-7 col-sm-12 col-12 p-0">
+                                        <label class="text-color1">Item Code : </label>
+                                        <label class="text-value-color font-weight-bold">{{ item.ItemCode }}</label>
+                                    </div>
+                                    <div class="col-md-4 col-sm-12 col-12 p-0">
+                                        <label class="text-color1">Item Group: </label>
+                                        <label class="text-value-color font-weight-bold">{{item.ItemGroup}} </label>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-12 p-0">
+                                        <label class="text-color1">Scanned/GRN QUantity : </label>
+                                        <label class="text-value-color font-weight-bold">{{item.Binning_Qty}}/{{item.Quantity}}</label>
+                                    </div> 
+                                    <!-- btnitemcomp && && enableBtn(item.ItemCode) && btnenabled   && enableBtn(item.ItemCode) && btnenabled && btnitemcomp  --> 
+                                    <div class="col-md-5 col-sm-12 col-12 p-0" *ngIf=" (item.GRNStatus != 'Completed') && item.Binning_Qty > 0 ">
+                                        <div class="d-flex mr-5">
+                                            <button type="button" id="present-alert" class="btn btn-primary btn-style" (click)="itemcomplete(item.ItemCode, item.Count, item.Quantity)">Complete Item</button>
+                                        </div>
+                                    </div>                            
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </ng-container>
+                        </div>
+                        </div>
+                        <div class="scroll-arrow scroll-down mr-3" (click)="scrollUp()" *ngIf="grndataArr.length > 1">&#9650;</div>
+                        <!-- <div class="scroll-arrow scroll-up" (click)="scrollDown()" *ngIf="grndataArr.length > 1">&#9660;</div> -->
+                    </div>   
+                </div>
+            </div>
+        </div>
+        <!-- <div style="text-align: center;">
+        <div id="arrange">
+            <ion-button
+            *ngIf="camFlag"
+            expand="block"
+            (click)="stopCam()"
+            class="custom-close-button"
+            style="--background: #14304d !important;"
+        >
+            Close Scanner
+        </ion-button>
+
+        <div id="reader" style="width: 450px; display: none;"> </div>
+        <div id="show" style="display: none;">
+        </div>
+        </div>
+        </div> -->
+    </ion-content>
+    <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
+    <ion-header>
+    <ion-toolbar>
+        <ion-title class="header_style">
+        <span class="grndetails_title ml-1">GRN Details</span>
+        </ion-title>
+        <ion-buttons slot="end">
+        <ion-icon name="close-circle" class="close" (click)="ShowViewDetails(false)"></ion-icon>
+        </ion-buttons>
+    </ion-toolbar>
+    </ion-header>
+    <ion-content>
+    <div class="fixed-grn mt-2 ">
+        <span class="text-color"> GRN NO : {{ selectedGrnNo }}</span>
+    </div>
+    <div class="scrollbar-container1">
+        <div class="grn_cardview position-relative">
+        <div class="scrollable-content1" #scrollContent1>
+            <div class="mb-3">
+            <ng-container *ngFor="let item of grndataArr; let i = index">
+                <div class="mb-3" *ngIf="item">
+                <div class="itemcard2 p-1">
+                    <div class="row">
+                    <div class="col-3 d-flex justify-content-center p-0">
+                        <!-- <ng-container>
+                        <img *ngIf="item.ItemGroup === 'SHIRT'" src="../../assets/images/shirt_original.png" style="height: 100px;" alt="Shirt">
+                        <img *ngIf="item.ItemGroup === 'KURTA'" src="../../assets/images/longkurta.png" style="height: 100px;" alt="Kurta">
+                        <img *ngIf="item.ItemGroup === 'Chudidhar'" src="../../assets/images/chudithar.png" style="height: 100px;" alt="Chudidhar" >
+                        <img *ngIf="item.ItemGroup === 'KidsDhoti'" src="../../assets/images/kidsdhoti.png"  style="height: 100px;" alt="KidsDhoti">
+                        <img *ngIf="item.ItemGroup === 'Lungi'" src="../../assets/images/lungi.png"  style="height: 100px;" alt="Lungi">
+                        <img *ngIf="item.ItemGroup === 'Brazier'" src="../../assets/images/brazier.png"  style="height: 100px;" alt="Brazier">
+                        <img *ngIf="item.ItemGroup === 'Pant'" src="../../assets/images/pant.png"  style="height: 100px;" alt="Pant">
+                        
+                        <img *ngIf="item.ItemGroup === 'Ethnics'" src="../../assets/images/ethnic-jacket.png"  style="height: 100px;" alt="Ethnics">
+                        <img *ngIf="item.ItemGroup === 'Banian'" src="../../assets/images/banian_red.png"  style="height: 100px;" alt="Banian">
+                        <img *ngIf="item.ItemGroup === 'Panchakacham'" src="../../assets/images/panchakacham.png"  style="height: 100px;" alt="Panchakacham">
+                        <img *ngIf="item.ItemGroup === 'Boxer'" src="../../assets/images/trunks.png"  style="height: 100px;" alt="Boxer">
+                        <img *ngIf="item.ItemGroup === 'Trunks'" src="../../assets/images/boxer.png"  style="height: 100px;" alt="Trunks">
+                        <img *ngIf="item.ItemGroup === 'Brief'" src="../../assets/images/briefs.png"  style="height: 100px;" alt="Brief">
+                        <img *ngIf="item.ItemGroup === 'Turban'" src="../../assets/images/turban.png"  style="height: 100px;" alt="Turban">
+                        <img *ngIf="item.ItemGroup === 'Skirt'" src="../../assets/images/longkurta.png"  style="height: 100px;" alt="Skirt">
+                        <img *ngIf="item.ItemGroup === 'Dhoti'" src="../../assets/images/dhioti.png"  style="height: 100px;" alt="Dhoti">
+                        <img *ngIf="item.ItemGroup === 'Saree'" src="../../assets/images/saree4.png"  style="height: 100px;" alt="Saree">
+                        <img *ngIf="item.ItemGroup === 'Panties'" src="../../assets/images/panties.png"  style="height: 100px;" alt="Panties">
+                        <img *ngIf="item.ItemGroup === 'Camisole'" src="../../assets/images/camisole.png"  style="height: 100px;" alt="Camisole">
+                        <img *ngIf="item.ItemGroup === 'SilkDhoti'" src="../../assets/images/silkdhoti.png"  style="height: 100px;" alt="Silk Dhoti">
+                        <img *ngIf="item.ItemGroup === 'ShirtDhotiSet'" src="../../assets/images/shirtdhotiset.png"  style="height: 100px;" alt="ShirtDhotiSet">
+                        <img *ngIf="item.ItemGroup === 'Tshirt'" src="../../assets/images/tshirt.png"  style="height: 100px;" alt="Tshirt">
+                        <img *ngIf="item.ItemGroup === 'Fabrics'" src="../../assets/images/fabricsetoriginal.png"  style="height: 100px;" alt="Fabrics">
+                        </ng-container> -->
+                    </div>
+                    <div class="col-9 p-0">
+                        <div class="col-md-7 col-sm-12 col-12 p-0">
+
+                        <label class="text-value-color font-weight-bold">{{ item.ItemName }}</label>
+                        </div>
+                        <div class="col-md-7 col-sm-12 col-12 p-0">
+                        <label class="text-color1">Item Code : </label>
+                        <label class="text-value-color font-weight-bold">{{ item.ItemCode }}</label>
+                        </div>
+                        <div class="col-md-5 col-sm-12 col-12 p-0">
+                        <label class="text-color1">Item Group: </label>
+                        <label class="text-value-color font-weight-bold">{{item.ItemGroup}}</label>
+                        </div>
+                        <div class="col-md-5 col-sm-12 col-12 p-0">
+                        <label class="text-color1">GRN Quantity : </label>
+                        <label class="text-value-color font-weight-bold">{{item.Quantity}}</label>
+                        </div>
+                        
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </ng-container>
+            </div>
+        </div>
+        <div class="scroll-arrow1 scroll-down mr-3" (click)="scrollUp1()" *ngIf="grndataArr.length > 1">&#9650;</div>
+        <!-- <div class="scroll-arrow scroll-up" (click)="scrollDown()" *ngIf="grndataArr.length > 1">&#9660;</div> -->
+        </div>
+    </div>
+    </ion-content>
+    </ng-template>
+    </ion-modal>
+    <div #scanModal class="modal fade" id="scanmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog scan-modal modal-center modal-fullscreen" style="display: grid !important;">
+          <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="d-flex justify-content-between p-3" style="background-color: #eff7fa;">
+                <h5 class="modal-title" id="exampleModalLabel">SCANNER</h5>
+                <button type="button" class="close" (click)="closeModal1()" aria-label="Close">
+                  <span aria-hidden="true">
+                    <ion-icon name="close-circle-outline" size="large"></ion-icon>
+                  </span>
+                </button>
+              </div>
+      
+            <!-- Modal Body -->
+            <div class="modal-body" style="text-align: center;">
+              <div id="arrange">
+                
+                <div id="reader" class="ml-4 mr-1" style="width: 458px;"></div>
+                <div id="show"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+
+
+
