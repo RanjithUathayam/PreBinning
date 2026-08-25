@@ -1,0 +1,42 @@
+.section-card {
+    background-color: white;
+    border: 1px solid rgb(102 102 102 / 25%);
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.section-title {
+    color: #14304d;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.total-qty {
+    color: #003F5E;
+    font-weight: 700;
+}
+
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.items-table {
+    width: 100%;
+    min-width: 320px;
+    margin-bottom: 0;
+}
+
+.items-table th {
+    color: white;
+    background-color: #14304d;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.items-table td {
+    color: #003F5E;
+    font-size: 13px;
+    vertical-align: middle;
+    white-space: nowrap;
+}

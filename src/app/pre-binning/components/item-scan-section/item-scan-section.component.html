@@ -1,0 +1,38 @@
+<div class="section-card">
+    <label class="section-title">SCAN ITEM QR</label>
+    <div class="d-flex flex-wrap align-items-center scan-row mt-2">
+        <input #itemInput type="text" class="form-control input-border-custom scan-input" placeholder="Scan / Enter Item QR"
+            [disabled]="disabled" (keyup.enter)="onEnter($event)" />
+        <button type="button" class="btn btn-style ml-sm-2 mt-2 mt-sm-0" [disabled]="disabled" (click)="onAddClick()">Add</button>
+    </div>
+    <div class="format-hint mt-1">Expected Format: ITEMCODE|TYPE|GRN NO|ITEMGROUP|UNIQUE NUMBER|QTY</div>
+
+    <div class="item-preview mt-3" *ngIf="preview">
+        <div class="row">
+            <div class="col-6 col-md-4 summary-item">
+                <span class="label">Item Code</span>
+                <span class="value">{{ preview.itemCode }}</span>
+            </div>
+            <div class="col-6 col-md-4 summary-item">
+                <span class="label">Type</span>
+                <span class="value">{{ preview.type }}</span>
+            </div>
+            <div class="col-6 col-md-4 summary-item">
+                <span class="label">GRN No</span>
+                <span class="value">{{ preview.grnNo }}</span>
+            </div>
+            <div class="col-6 col-md-4 summary-item">
+                <span class="label">Item Group</span>
+                <span class="value">{{ preview.itemGroup }}</span>
+            </div>
+            <div class="col-6 col-md-4 summary-item">
+                <span class="label">Unique Number</span>
+                <span class="value">{{ preview.uniqueNumber }}</span>
+            </div>
+            <div class="col-6 col-md-4 summary-item">
+                <span class="label">Qty</span>
+                <span class="value">{{ preview.qty }}</span>
+            </div>
+        </div>
+    </div>
+</div>

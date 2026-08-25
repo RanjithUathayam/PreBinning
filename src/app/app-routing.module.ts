@@ -38,6 +38,10 @@ const routes: Routes = [
     path: 'stock-adjustment',
     loadChildren: () => import('./stock-adjustment/stock-adjustment.module').then( m => m.StockAdjustmentPageModule)
   },
+  {
+    path: 'pre-binning',
+    loadChildren: () => import('./pre-binning/pre-binning.module').then( m => m.PreBinningPageModule)
+  },
 ];
 
 @NgModule({

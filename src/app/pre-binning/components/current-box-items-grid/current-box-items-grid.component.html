@@ -1,0 +1,29 @@
+<div class="section-card">
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <label class="section-title mb-0">CURRENT BOX ITEMS</label>
+        <span class="total-qty">Current Box Qty: {{ totalQty }}</span>
+    </div>
+    <div class="table-responsive-wrapper mt-2">
+        <table class="table items-table">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Item Code</th>
+                    <th>Type</th>
+                    <th>Qty</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!groupedItems || groupedItems.length === 0">
+                    <td colspan="4" class="text-center">No items scanned into this box yet.</td>
+                </tr>
+                <tr *ngFor="let item of groupedItems; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.itemCode }}</td>
+                    <td>{{ item.type }}</td>
+                    <td>{{ item.qty }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

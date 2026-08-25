@@ -1,0 +1,33 @@
+<div class="section-card">
+    <label class="section-title">BOX QR</label>
+    <div class="d-flex flex-wrap align-items-center scan-row mt-2">
+        <input #boxInput type="text" class="form-control input-border-custom scan-input" [placeholder]="placeholder"
+            [disabled]="disabled" (keyup.enter)="onEnter($event)" />
+        <button type="button" class="btn btn-style ml-sm-2 mt-2 mt-sm-0" [disabled]="disabled" (click)="onScanButtonClick()">Scan Box</button>
+    </div>
+
+    <div class="box-summary mt-3" *ngIf="boxNumber">
+        <div class="row">
+            <div class="col-6 col-md-3 summary-item">
+                <span class="label">Current Box</span>
+                <span class="value">{{ boxNumber }}</span>
+            </div>
+            <div class="col-6 col-md-3 summary-item">
+                <span class="label">Item Group</span>
+                <span class="value">{{ itemGroup || '-' }}</span>
+            </div>
+            <div class="col-6 col-md-3 summary-item">
+                <span class="label">Box Qty</span>
+                <span class="value">{{ qty }}</span>
+            </div>
+            <div class="col-6 col-md-3 summary-item">
+                <span class="label">Status</span>
+                <span class="value">{{ status || '-' }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="box-summary mt-3" *ngIf="!boxNumber">
+        <span class="text-muted">No box scanned yet. Scan a Box QR to begin.</span>
+    </div>
+</div>

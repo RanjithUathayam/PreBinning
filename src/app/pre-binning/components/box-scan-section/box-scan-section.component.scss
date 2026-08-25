@@ -1,0 +1,63 @@
+.section-card {
+    background-color: white;
+    border: 1px solid rgb(102 102 102 / 25%);
+    border-radius: 6px;
+    padding: 10px;
+    height: 100%;
+}
+
+.section-title {
+    color: #14304d;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.scan-input {
+    flex: 1 1 auto;
+    min-width: 200px;
+}
+
+.btn-style {
+    background-color: #14304d !important;
+    color: white;
+    font-weight: 600;
+    white-space: nowrap;
+    border-radius: 40px;
+}
+
+.box-summary {
+    border: 1px solid rgb(102 102 102 / 25%);
+    border-radius: 4px;
+    background-color: #EFF7FA;
+    padding: 8px;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 6px;
+}
+
+.label {
+    color: #14304d;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.value {
+    color: #003F5E;
+    font-weight: 700;
+    font-size: 16px;
+    word-break: break-word;
+}
+
+@media (max-width: 576px) {
+    .scan-row {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+
+    .scan-input {
+        min-width: 100%;
+    }
+}

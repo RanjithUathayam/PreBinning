@@ -1,0 +1,31 @@
+<div class="section-card">
+    <label class="section-title">WAREHOUSE STOCK</label>
+    <div class="table-responsive-wrapper mt-2">
+        <table class="table stock-table">
+            <thead>
+                <tr>
+                    <th>Item Code</th>
+                    <th>Item Group</th>
+                    <th>Available Qty</th>
+                    <th>Binned Qty</th>
+                    <th>Balance Qty</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="loading">
+                    <td colspan="5" class="text-center">Loading...</td>
+                </tr>
+                <tr *ngIf="!loading && (!stock || stock.length === 0)">
+                    <td colspan="5" class="text-center">{{ noDataMessage }}</td>
+                </tr>
+                <tr *ngFor="let row of stock">
+                    <td>{{ row.itemCode }}</td>
+                    <td>{{ row.itemGroup }}</td>
+                    <td>{{ row.availableQty }}</td>
+                    <td>{{ row.binnedQty }}</td>
+                    <td>{{ row.balanceQty }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

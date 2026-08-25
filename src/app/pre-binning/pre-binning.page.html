@@ -1,0 +1,86 @@
+<ion-header>
+    <ion-toolbar>
+        <app-pageheader [title]="'PRE-BINNING PROCESS'"></app-pageheader>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <div class="container-fluid p-2">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="header-meta d-flex flex-wrap justify-content-between align-items-center mb-2">
+                    <div class="meta-item">
+                        <span class="label">User</span>
+                        <span class="value">{{ currentUser }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Warehouse</span>
+                        <span class="value">{{ isWarehouseSelected ? formattedWarehouseLabel() : 'NOT SELECTED' }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Station</span>
+                        <span class="value">{{ selectedStation }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Date / Time</span>
+                        <span class="value">{{ currentDateTime | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                    </div>
+                </div>
+
+                <div class="section-card select-warehouse-card mb-3">
+                    <label class="section-title">SELECT WAREHOUSE</label>
+                    <div class="d-flex flex-wrap align-items-center scan-row mt-2">
+                        <select class="form-control input-border-custom warehouse-select"
+                            [(ngModel)]="warehouseDropdownSelection" [disabled]="loadingWarehouses">
+                            <option [ngValue]="null" disabled>{{ loadingWarehouses ? 'Loading warehouses...' : 'Select Warehouse' }}</option>
+                            <option *ngFor="let w of warehouseList" [ngValue]="w.whsCode">{{ w.whsCode }} - {{ w.whsName }}</option>
+                        </select>
+                    </div>
+                    <div class="text-center mt-2">
+                        <button type="button" class="btn btn-style" [disabled]="loadingWarehouses" (click)="continueWithWarehouse()">CONTINUE</button>
+                    </div>
+                    <div class="mt-2 text-muted" *ngIf="!isWarehouseSelected">Please select a warehouse to begin Pre-Binning.</div>
+                    <div class="mt-2 selected-warehouse-label" *ngIf="isWarehouseSelected">Selected Warehouse: {{ formattedWarehouseLabel() }}</div>
+                </div>
+
+                <div class="validation-banner mb-3" *ngIf="validationMessage" [ngClass]="validationLevel">
+                    {{ validationMessage }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-lg-6 mb-3">
+                <app-warehouse-stock-grid [stock]="warehouseStock" [loading]="isLoading"
+                    [noDataMessage]="isWarehouseSelected ? 'No available stock found for selected warehouse.' : 'Select a warehouse to view stock.'">
+                </app-warehouse-stock-grid>
+            </div>
+            <div class="col-12 col-lg-6 mb-3">
+                <app-box-scan-section [disabled]="!isWarehouseSelected || scanning" [boxNumber]="currentBox"
+                    [itemGroup]="currentBoxItemGroup" [qty]="currentBoxQty" [status]="currentBoxStatus"
+                    [placeholder]="isWarehouseSelected ? 'Scan / Enter Box QR' : 'Select Warehouse First'"
+                    (boxScanned)="onBoxScanned($event)"></app-box-scan-section>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <app-item-scan-section [disabled]="!isBoxScanned || scanning" (itemScanned)="onItemScanned($event)"></app-item-scan-section>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <app-current-box-items-grid [items]="currentBoxItems" [totalQty]="currentBoxQty"></app-current-box-items-grid>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center mb-3">
+                <button type="button" class="btn btn-style complete-btn"
+                    [disabled]="!isBoxScanned || currentBoxItems.length === 0 || scanning" (click)="completeBox()">Complete Box</button>
+            </div>
+        </div>
+
+    </div>
+</ion-content>
