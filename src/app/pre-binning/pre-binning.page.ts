@@ -39,7 +39,6 @@ export class PreBinningPage implements OnInit, OnDestroy {
     currentBoxItems: CurrentBoxItem[] = [];
     currentBoxQty = 0;
     currentBoxStatus = '';
-    scannedUniqueNumbers: Set<string> = new Set<string>();
     isBoxScanned = false;
     isBoxCompleted = false;
 
@@ -190,7 +189,6 @@ export class PreBinningPage implements OnInit, OnDestroy {
                     this.currentBoxStatus = data.status || 'IN PROGRESS';
                     this.currentBoxItems = [];
                     this.currentBoxQty = 0;
-                    this.scannedUniqueNumbers.clear();
                     this.isBoxScanned = true;
                     this.isBoxCompleted = false;
                     this.itemScanSection?.setPreview(null);
@@ -225,7 +223,6 @@ export class PreBinningPage implements OnInit, OnDestroy {
                     // items so a box being re-scanned never shows a stale/zero quantity.
                     const computedQty = this.currentBoxItems.reduce((sum, it) => sum + (Number(it.qty) || 0), 0);
                     this.currentBoxQty = res.data.totalQty ?? computedQty;
-                    this.scannedUniqueNumbers = new Set(this.currentBoxItems.map((i) => i.uniqueNumber));
 
                     if (this.currentBoxItems.length > 0) {
                         this.setValidation('success', `Box ${boxNumber} already has ${this.currentBoxItems.length} item(s) scanned — Existing Qty: ${this.currentBoxQty}, Item Group: ${this.currentBoxItemGroup}. Continue scanning to add more.`);
@@ -267,11 +264,8 @@ export class PreBinningPage implements OnInit, OnDestroy {
             return;
         }
 
-        if (this.scannedUniqueNumbers.has(parsed.uniqueNumber)) {
-            this.setValidation('error', `Duplicate Unique Number. Unique Number ${parsed.uniqueNumber} has already been scanned.`, () => this.itemScanSection?.focusInput());
-            return;
-        }
-
+        // Unique Number is not, by itself, a valid duplicate key (ItemCode + UniqueNumber is) —
+        // the backend is the sole authority on whether this combination has already been scanned.
         this.scanning = true;
         this.preBinningApi.scanItem({
             boxNumber: this.currentBox,
@@ -288,13 +282,14 @@ export class PreBinningPage implements OnInit, OnDestroy {
                 if (res && res.success) {
                     const data = res.data || {};
                     this.currentBoxItems = [...this.currentBoxItems, { ...parsed, scanTime: this.formatTime(new Date()) }];
-                    this.scannedUniqueNumbers.add(parsed.uniqueNumber);
                     this.currentBoxItemGroup = this.currentBoxItemGroup || parsed.itemGroup;
                     this.currentBoxQty = data.boxTotalQty ?? (this.currentBoxQty + parsed.qty);
                     this.showToast(`Item Added Successfully — ${parsed.itemCode} / Unique No: ${parsed.uniqueNumber} / Qty: ${parsed.qty}`, 'success');
                     this.setValidation('success', 'Item added successfully.');
                     this.loadWarehouseStock();
                     this.itemScanSection?.focusInput();
+                } else if (res?.code === 'DUPLICATE_ITEM_UNIQUE_NUMBER') {
+                    this.presentDuplicateItemAlert(parsed.itemCode, parsed.uniqueNumber, () => this.itemScanSection?.focusInput());
                 } else {
                     this.setValidation('error', res?.message || 'Item scan failed.', () => this.itemScanSection?.focusInput());
                 }
@@ -360,7 +355,6 @@ export class PreBinningPage implements OnInit, OnDestroy {
         this.currentBoxItems = [];
         this.currentBoxQty = 0;
         this.currentBoxStatus = '';
-        this.scannedUniqueNumbers.clear();
         this.isBoxScanned = false;
         this.validationMessage = '';
         this.validationLevel = '';
@@ -374,6 +368,23 @@ export class PreBinningPage implements OnInit, OnDestroy {
         if (level === 'error') {
             this.presentValidationAlert(message, onDismiss);
         }
+    }
+
+    private async presentDuplicateItemAlert(itemCode: string, uniqueNumber: string, onDismiss?: () => void) {
+        const message = `Item Code: ${itemCode}<br>Unique No: ${uniqueNumber}<br><br>This Item Code + Unique Number has already been scanned.`;
+        this.validationLevel = 'error';
+        this.validationMessage = `Duplicate Item Scan. Item Code: ${itemCode}, Unique No: ${uniqueNumber}. This Item Code + Unique Number has already been scanned.`;
+        const alert = await this.alertController.create({
+            header: 'Duplicate Item Scan',
+            message,
+            buttons: [{
+                text: 'OK',
+                cssClass: 'alert-button-confirm',
+                handler: () => { onDismiss?.(); }
+            }],
+            cssClass: 'custom-alert'
+        });
+        await alert.present();
     }
 
     private async presentValidationAlert(message: string, onDismiss?: () => void) {

@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "host":"ng serve --host 10.0.210.60 --port 4201",
+    "host":"ng serve --host 10.0.11.8 --port 4201",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
