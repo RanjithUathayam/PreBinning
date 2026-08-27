@@ -264,7 +264,7 @@ export class PreBinningPage implements OnInit, OnDestroy {
             return;
         }
 
-        // Unique Number is not, by itself, a valid duplicate key (ItemCode + UniqueNumber is) —
+        // Unique Number is not, by itself, a valid duplicate key (ItemCode + GRNNo + UniqueNumber is) —
         // the backend is the sole authority on whether this combination has already been scanned.
         this.scanning = true;
         this.preBinningApi.scanItem({
@@ -289,7 +289,7 @@ export class PreBinningPage implements OnInit, OnDestroy {
                     this.loadWarehouseStock();
                     this.itemScanSection?.focusInput();
                 } else if (res?.code === 'DUPLICATE_ITEM_UNIQUE_NUMBER') {
-                    this.presentDuplicateItemAlert(parsed.itemCode, parsed.uniqueNumber, () => this.itemScanSection?.focusInput());
+                    this.presentDuplicateItemAlert(parsed.itemCode, parsed.grnNo, parsed.uniqueNumber, () => this.itemScanSection?.focusInput());
                 } else {
                     this.setValidation('error', res?.message || 'Item scan failed.', () => this.itemScanSection?.focusInput());
                 }
@@ -370,10 +370,10 @@ export class PreBinningPage implements OnInit, OnDestroy {
         }
     }
 
-    private async presentDuplicateItemAlert(itemCode: string, uniqueNumber: string, onDismiss?: () => void) {
-        const message = `Item Code: ${itemCode}<br>Unique No: ${uniqueNumber}<br><br>This Item Code + Unique Number has already been scanned.`;
+    private async presentDuplicateItemAlert(itemCode: string, grnNo: string, uniqueNumber: string, onDismiss?: () => void) {
+        const message = `Item Code: ${itemCode}<br>GRN No: ${grnNo}<br>Unique No: ${uniqueNumber}<br><br>This Item Code + GRN No + Unique Number has already been scanned.`;
         this.validationLevel = 'error';
-        this.validationMessage = `Duplicate Item Scan. Item Code: ${itemCode}, Unique No: ${uniqueNumber}. This Item Code + Unique Number has already been scanned.`;
+        this.validationMessage = `Duplicate Item Scan. Item Code: ${itemCode}, GRN No: ${grnNo}, Unique No: ${uniqueNumber}. This Item Code + GRN No + Unique Number has already been scanned.`;
         const alert = await this.alertController.create({
             header: 'Duplicate Item Scan',
             message,
