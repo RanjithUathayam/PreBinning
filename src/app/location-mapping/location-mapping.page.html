@@ -1,0 +1,67 @@
+<ion-header>
+    <ion-toolbar>
+        <app-pageheader [title]="'LOCATION MAPPING'"></app-pageheader>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <div class="container-fluid p-2">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="header-meta d-flex flex-wrap justify-content-between align-items-center mb-2">
+                    <div class="meta-item">
+                        <span class="label">User</span>
+                        <span class="value">{{ currentUser }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Warehouse</span>
+                        <span class="value">{{ selectedWarehouse ? formattedWarehouseLabel() : 'NOT SELECTED' }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Station</span>
+                        <span class="value">{{ selectedStation }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Date / Time</span>
+                        <span class="value">{{ currentDateTime | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                    </div>
+                </div>
+
+                <div class="validation-banner mb-3" *ngIf="validationMessage" [ngClass]="validationLevel">
+                    {{ validationMessage }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <app-location-select-section [disabled]="scanning || mapping"
+                    [warehouseList]="warehouseList" [rowList]="rowList" [positionList]="positionList"
+                    [loadingWarehouses]="loadingWarehouses" [loadingRows]="loadingRows" [loadingPositions]="loadingPositions"
+                    [selectedWarehouse]="selectedWarehouse" [selectedRow]="selectedRow" [selectedLocationCode]="selectedLocationCode"
+                    (warehouseChange)="onWarehouseChange($event)" (rowChange)="onRowChange($event)"
+                    (positionChange)="onPositionChange($event)">
+                </app-location-select-section>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <app-lm-pallet-scan-section [disabled]="!selectedLocationCode || scanning || mapping"
+                    [scanning]="scanning" [mapping]="mapping"
+                    [placeholder]="selectedLocationCode ? 'Scan Pallet QR' : 'Select Warehouse, Row & Position First'"
+                    [locationCode]="selectedPositionNo" [pallet]="pallet"
+                    (palletScanned)="onPalletScanned($event)" (mapLocation)="confirmMapLocation()"
+                    (cancelPallet)="cancelPallet()">
+                </app-lm-pallet-scan-section>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <app-recent-mappings-grid [mappings]="recentMappings"></app-recent-mappings-grid>
+            </div>
+        </div>
+
+    </div>
+</ion-content>

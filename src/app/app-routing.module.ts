@@ -42,6 +42,14 @@ const routes: Routes = [
     path: 'pre-binning',
     loadChildren: () => import('./pre-binning/pre-binning.module').then( m => m.PreBinningPageModule)
   },
+  {
+    path: 'pallet-mapping',
+    loadChildren: () => import('./pallet-mapping/pallet-mapping.module').then( m => m.PalletMappingPageModule)
+  },
+  {
+    path: 'location-mapping',
+    loadChildren: () => import('./location-mapping/location-mapping.module').then( m => m.LocationMappingPageModule)
+  },
 ];
 
 @NgModule({

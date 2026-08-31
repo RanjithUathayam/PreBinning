@@ -1,0 +1,50 @@
+<div class="section-card">
+    <label class="section-title">SCAN PALLET QR</label>
+
+    <div class="d-flex flex-wrap align-items-center scan-row mt-2" *ngIf="!pallet">
+        <input #palletInput type="text" class="form-control input-border-custom scan-input" [placeholder]="placeholder"
+            [disabled]="disabled" (keyup.enter)="onEnter($event)" autocomplete="off" />
+        <button type="button" class="btn btn-style ml-sm-2 mt-2 mt-sm-0" [disabled]="disabled" (click)="onScanButtonClick()">
+            {{ scanning ? 'Scanning...' : 'Scan Pallet' }}
+        </button>
+    </div>
+
+    <div class="pallet-summary mt-3" *ngIf="pallet">
+        <div class="row">
+            <div class="col-6 col-md-3 summary-item">
+                <span class="label">Pallet ID</span>
+                <span class="value">{{ pallet.palletId }}</span>
+            </div>
+            <div class="col-6 col-md-3 summary-item">
+                <span class="label">Location</span>
+                <span class="value">{{ locationCode }}</span>
+            </div>
+            <div class="col-6 col-md-3 summary-item">
+                <span class="label">Box Count</span>
+                <span class="value">{{ pallet.boxCount }}</span>
+            </div>
+            <div class="col-6 col-md-3 summary-item">
+                <span class="label">Total Qty</span>
+                <span class="value">{{ pallet.totalQty }}</span>
+            </div>
+            <div class="col-6 col-md-3 summary-item mt-2">
+                <span class="label">Inventory Status</span>
+                <span class="value">{{ pallet.inventoryStatus || '-' }}</span>
+            </div>
+            <div class="col-6 col-md-3 summary-item mt-2">
+                <span class="label">Pallet Status</span>
+                <span class="value">{{ pallet.palletStatus || '-' }}</span>
+            </div>
+            <div class="col-12 col-md-6 mt-2 d-flex align-items-center justify-content-md-end">
+                <button type="button" class="btn btn-cancel-style me-2" [disabled]="mapping" (click)="onCancelClick()">Cancel</button>
+                <button type="button" class="btn btn-style map-btn" [disabled]="mapping" (click)="onMapClick()">
+                    {{ mapping ? 'Mapping...' : 'Map Location' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="pallet-summary mt-3" *ngIf="!pallet && disabled">
+        <span class="text-muted">Select Warehouse, Row and Position to begin pallet scanning.</span>
+    </div>
+</div>

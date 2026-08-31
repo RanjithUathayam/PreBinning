@@ -1,0 +1,29 @@
+<div class="section-card">
+    <label class="section-title">SELECT LOCATION</label>
+    <div class="row mt-2">
+        <div class="col-12 col-md-4 mb-2 mb-md-0">
+            <label class="field-label">Warehouse</label>
+            <select class="form-control input-border-custom" [ngModel]="selectedWarehouse"
+                (ngModelChange)="onWarehouseChange($event)" [disabled]="disabled || loadingWarehouses">
+                <option [ngValue]="null" disabled>{{ loadingWarehouses ? 'Loading warehouses...' : 'Select Warehouse' }}</option>
+                <option *ngFor="let w of warehouseList" [ngValue]="w.whsCode">{{ w.whsCode }} - {{ w.whsName }}</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-4 mb-2 mb-md-0">
+            <label class="field-label">Row</label>
+            <select class="form-control input-border-custom" [ngModel]="selectedRow"
+                (ngModelChange)="onRowChange($event)" [disabled]="disabled || !selectedWarehouse || loadingRows">
+                <option [ngValue]="null" disabled>{{ !selectedWarehouse ? 'Select Warehouse First' : (loadingRows ? 'Loading rows...' : 'Select Row') }}</option>
+                <option *ngFor="let r of rowList" [ngValue]="r.rowCode">{{ r.rowCode }}{{ r.rowName ? ' - ' + r.rowName : '' }}</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-4">
+            <label class="field-label">Pallet Position</label>
+            <select class="form-control input-border-custom" [ngModel]="selectedLocationCode"
+                (ngModelChange)="onPositionChange($event)" [disabled]="disabled || !selectedRow || loadingPositions">
+                <option [ngValue]="null" disabled>{{ !selectedRow ? 'Select Row First' : (loadingPositions ? 'Loading positions...' : (positionList.length === 0 ? 'No positions available' : 'Select Position')) }}</option>
+                <option *ngFor="let p of positionList" [ngValue]="p.locationCode">{{ p.positionNo }}</option>
+            </select>
+        </div>
+    </div>
+</div>

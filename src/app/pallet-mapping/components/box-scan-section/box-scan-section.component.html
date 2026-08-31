@@ -1,0 +1,11 @@
+<div class="section-card">
+    <label class="section-title">SCAN BOX NUMBER</label>
+    <div class="d-flex flex-wrap align-items-center scan-row mt-2">
+        <input #boxInput type="text" class="form-control input-border-custom scan-input"
+            [placeholder]="disabled ? 'Scan Pallet First' : 'Scan / Enter Box Number'"
+            [disabled]="disabled" (keyup.enter)="onEnter($event)" autocomplete="off" />
+        <button type="button" class="btn btn-style ml-sm-2 mt-2 mt-sm-0" [disabled]="disabled" (click)="onAddClick()">
+            {{ scanning ? 'Scanning...' : 'Scan Box' }}
+        </button>
+    </div>
+</div>

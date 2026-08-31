@@ -1,0 +1,63 @@
+<ion-header>
+    <ion-toolbar>
+        <app-pageheader [title]="'PALLET MAPPING'"></app-pageheader>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <div class="container-fluid p-2">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="header-meta d-flex flex-wrap justify-content-between align-items-center mb-2">
+                    <div class="meta-item">
+                        <span class="label">User</span>
+                        <span class="value">{{ currentUser }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Station</span>
+                        <span class="value">{{ selectedStation }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Date / Time</span>
+                        <span class="value">{{ currentDateTime | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                    </div>
+                </div>
+
+                <div class="validation-banner mb-3" *ngIf="validationMessage" [ngClass]="validationLevel">
+                    {{ validationMessage }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <app-pallet-scan-section [disabled]="scanning" [scanning]="scanning" [locked]="isPalletScanned"
+                    [palletId]="palletId" [status]="palletStatus" [totalBoxes]="currentPalletBoxes.length"
+                    (palletScanned)="onPalletScanned($event)" (cancelPallet)="cancelPallet()">
+                </app-pallet-scan-section>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <app-pm-box-scan-section [disabled]="!isPalletScanned || scanning" [scanning]="scanning"
+                    (boxScanned)="onBoxScanned($event)"></app-pm-box-scan-section>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <app-current-pallet-boxes-grid [boxes]="currentPalletBoxes"></app-current-pallet-boxes-grid>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center mb-3">
+                <button type="button" class="btn btn-style complete-btn"
+                    [disabled]="!isPalletScanned || currentPalletBoxes.length === 0 || scanning"
+                    (click)="completePallet()">Complete Pallet</button>
+            </div>
+        </div>
+
+    </div>
+</ion-content>

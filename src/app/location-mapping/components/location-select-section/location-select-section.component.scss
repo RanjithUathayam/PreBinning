@@ -1,0 +1,24 @@
+.section-card {
+    background-color: white;
+    border: 1px solid rgb(102 102 102 / 25%);
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.section-title {
+    color: #14304d;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.field-label {
+    color: #14304d;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.input-border-custom {
+    border-color: #14304d !important;
+}

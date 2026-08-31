@@ -1,0 +1,35 @@
+<div class="section-card">
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <label class="section-title mb-0">RECENT MAPPINGS (THIS SESSION)</label>
+        <span class="total-count">Total Mapped: {{ mappings.length }}</span>
+    </div>
+    <div class="table-responsive-wrapper mt-2">
+        <table class="table items-table">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Pallet ID</th>
+                    <th>Location</th>
+                    <th>Box Count</th>
+                    <th>Total Qty</th>
+                    <th>Inventory Status</th>
+                    <th>Mapped Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!mappings || mappings.length === 0">
+                    <td colspan="7" class="text-center">No pallets mapped in this session yet.</td>
+                </tr>
+                <tr *ngFor="let m of mappings; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ m.palletId }}</td>
+                    <td>{{ m.locationCode }}</td>
+                    <td>{{ m.boxCount }}</td>
+                    <td>{{ m.totalQty }}</td>
+                    <td>{{ m.inventoryStatus }}</td>
+                    <td>{{ m.mappedTime }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

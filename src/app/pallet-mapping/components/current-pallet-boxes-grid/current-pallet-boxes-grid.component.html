@@ -1,0 +1,29 @@
+<div class="section-card">
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <label class="section-title mb-0">MAPPED BOXES</label>
+        <span class="total-count">Total Boxes: {{ boxes.length }}</span>
+    </div>
+    <div class="table-responsive-wrapper mt-2">
+        <table class="table items-table">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Box Number</th>
+                    <th>Scan Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!boxes || boxes.length === 0">
+                    <td colspan="4" class="text-center">No boxes scanned into this pallet yet.</td>
+                </tr>
+                <tr *ngFor="let box of boxes; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ box.boxNumber }}</td>
+                    <td>{{ box.scanTime }}</td>
+                    <td>{{ box.status }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

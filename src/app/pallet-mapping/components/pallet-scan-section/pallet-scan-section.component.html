@@ -1,0 +1,35 @@
+<div class="section-card">
+    <label class="section-title">PALLET ID</label>
+
+    <div class="d-flex flex-wrap align-items-center scan-row mt-2" *ngIf="!locked">
+        <input #palletInput type="text" class="form-control input-border-custom scan-input" [placeholder]="placeholder"
+            [disabled]="disabled" (keyup.enter)="onEnter($event)" autocomplete="off" />
+        <button type="button" class="btn btn-style ml-sm-2 mt-2 mt-sm-0" [disabled]="disabled" (click)="onScanButtonClick()">
+            {{ scanning ? 'Scanning...' : 'Scan Pallet' }}
+        </button>
+    </div>
+
+    <div class="pallet-summary mt-3" *ngIf="locked">
+        <div class="row">
+            <div class="col-6 col-md-3 summary-item">
+                <span class="label">Current Pallet</span>
+                <span class="value">{{ palletId }}</span>
+            </div>
+            <div class="col-6 col-md-3 summary-item">
+                <span class="label">Status</span>
+                <span class="value">{{ status || '-' }}</span>
+            </div>
+            <div class="col-6 col-md-3 summary-item">
+                <span class="label">Boxes Scanned</span>
+                <span class="value">{{ totalBoxes }}</span>
+            </div>
+            <div class="col-6 col-md-3 d-flex align-items-center justify-content-md-end">
+                <button type="button" class="btn btn-cancel-style" [disabled]="scanning" (click)="onCancelClick()">Cancel Pallet</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="pallet-summary mt-3" *ngIf="!locked && !palletId">
+        <span class="text-muted">No pallet scanned yet. Scan a Pallet ID to begin.</span>
+    </div>
+</div>
