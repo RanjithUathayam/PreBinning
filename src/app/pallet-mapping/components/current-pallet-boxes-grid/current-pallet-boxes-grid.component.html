@@ -9,8 +9,8 @@
                 <tr>
                     <th>S.No</th>
                     <th>Box Number</th>
-                    <th>Scan Time</th>
-                    <th>Status</th>
+                    <th>Mapped Time</th>
+                    <th>Mapped By</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,8 +20,8 @@
                 <tr *ngFor="let box of boxes; let i = index">
                     <td>{{ i + 1 }}</td>
                     <td>{{ box.boxNumber }}</td>
-                    <td>{{ box.scanTime }}</td>
-                    <td>{{ box.status }}</td>
+                    <td>{{ box.mappedAt | date:'dd-MM-yyyy HH:mm:ss' }}</td>
+                    <td>{{ box.mappedBy }}</td>
                 </tr>
             </tbody>
         </table>

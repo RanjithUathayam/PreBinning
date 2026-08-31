@@ -1,6 +1,6 @@
 export interface WarehouseOption {
-    whsCode: string;
-    whsName: string;
+    warehouseCode: string;
+    warehouseName: string;
 }
 
 export interface RowOption {

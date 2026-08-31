@@ -80,9 +80,9 @@ export class LocationMappingPage implements OnInit, OnDestroy {
                 if (res && res.success) {
                     this.warehouseList = res.data || [];
                     if (this.selectedWarehouse) {
-                        const wh = this.warehouseList.find((w) => w.whsCode === this.selectedWarehouse);
+                        const wh = this.warehouseList.find((w) => w.warehouseCode === this.selectedWarehouse);
                         if (wh) {
-                            this.selectedWarehouseName = wh.whsName;
+                            this.selectedWarehouseName = wh.warehouseName;
                             this.loadRows(this.selectedWarehouse);
                         } else {
                             this.selectedWarehouse = null;
@@ -105,8 +105,8 @@ export class LocationMappingPage implements OnInit, OnDestroy {
             return;
         }
         this.selectedWarehouse = code;
-        const wh = this.warehouseList.find((w) => w.whsCode === code);
-        this.selectedWarehouseName = wh ? wh.whsName : null;
+        const wh = this.warehouseList.find((w) => w.warehouseCode === code);
+        this.selectedWarehouseName = wh ? wh.warehouseName : null;
         localStorage.setItem('LocationMappingWarehouseCode', code);
         this.resetRowAndPosition();
         this.resetPallet();
@@ -191,49 +191,37 @@ export class LocationMappingPage implements OnInit, OnDestroy {
         }
 
         this.scanning = true;
-        this.locationMappingApi.validatePallet({ palletQr, locationCode: this.selectedLocationCode }).subscribe({
+        this.locationMappingApi.getPalletMapping(palletQr).subscribe({
             next: (res: any) => {
                 this.scanning = false;
                 if (res && res.success) {
                     const data = res.data || {};
+                    if (data.status !== 'COMPLETED') {
+                        this.setValidation('error', `Pallet ${palletQr} has not completed Pallet Mapping yet.`, () => this.palletScanSection?.focusInput());
+                        return;
+                    }
+                    const boxes = data.boxes || [];
                     this.pallet = {
                         palletId: data.palletId || palletQr,
-                        palletStatus: data.palletStatus || '',
-                        boxCount: data.boxCount ?? 0,
-                        totalQty: data.totalQty ?? 0,
-                        inventoryStatus: data.inventoryStatus || ''
+                        palletStatus: data.status || '',
+                        boxCount: data.totalBoxCount ?? boxes.length,
+                        totalQty: boxes.reduce((sum: number, b: any) => sum + (b.boxTotalQty || 0), 0),
+                        inventoryStatus: ''
                     };
                     this.setValidation('success', `Pallet ${this.pallet.palletId} validated. Ready to map to ${this.selectedPositionNo}.`);
                 } else {
-                    this.setValidation('error', this.messageForValidationError(res, palletQr), () => this.palletScanSection?.focusInput());
+                    this.setValidation('error', res?.message || 'Pallet validation failed.', () => this.palletScanSection?.focusInput());
                 }
             },
             error: (err: any) => {
                 this.scanning = false;
+                if (err?.status === 404) {
+                    this.setValidation('error', `Pallet ${palletQr} has no Pallet Mapping record.`, () => this.palletScanSection?.focusInput());
+                    return;
+                }
                 this.setValidation('error', this.extractErrorMessage(err), () => this.palletScanSection?.focusInput());
             }
         });
-    }
-
-    private messageForValidationError(res: any, palletQr: string): string {
-        switch (res?.code) {
-            case 'INVALID_PALLET_QR':
-                return res?.message || `Invalid Pallet QR: ${palletQr}.`;
-            case 'PALLET_MAPPING_INCOMPLETE':
-                return res?.message || `Pallet ${palletQr} has not completed Pallet Mapping yet.`;
-            case 'PALLET_ALREADY_ASSIGNED':
-                return res?.message || `Pallet ${palletQr} is already assigned to another location.`;
-            case 'LOCATION_OCCUPIED':
-                return res?.message || 'Selected location is already occupied.';
-            case 'LOCATION_BLOCKED':
-                return res?.message || 'Selected location is blocked or inactive.';
-            case 'INVALID_LOCATION':
-                return res?.message || 'Invalid Warehouse/Row/Position combination.';
-            case 'PALLET_NOT_ELIGIBLE':
-                return res?.message || `Pallet ${palletQr} is not eligible for location mapping.`;
-            default:
-                return res?.message || 'Pallet validation failed.';
-        }
     }
 
     confirmMapLocation() {

@@ -1,5 +1,8 @@
 export interface CurrentPalletBox {
     boxNumber: string;
-    scanTime: string;
-    status: string;
+    warehouseCode?: string | null;
+    itemGroup?: string | null;
+    boxTotalQty?: number | null;
+    mappedBy?: string;
+    mappedAt?: string;
 }

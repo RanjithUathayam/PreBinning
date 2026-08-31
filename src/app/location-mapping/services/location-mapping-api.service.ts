@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -18,21 +18,22 @@ export class LocationMappingApiService {
     }
 
     getWarehouses(): Observable<any> {
-        return this.http.get(this.baseURL + 'location-mapping/warehouses', { headers: this.getHeaders() });
+        return this.http.get(this.baseURL + 'location/warehouses', { headers: this.getHeaders() });
     }
 
     getRows(whsCode: string): Observable<any> {
-        const params = new HttpParams().set('whsCode', whsCode);
-        return this.http.get(this.baseURL + 'location-mapping/rows', { headers: this.getHeaders(), params });
+        return this.http.get(this.baseURL + 'location/warehouse/' + encodeURIComponent(whsCode) + '/rows', { headers: this.getHeaders() });
     }
 
     getAvailablePositions(whsCode: string, rowCode: string): Observable<any> {
-        const params = new HttpParams().set('whsCode', whsCode).set('rowCode', rowCode);
-        return this.http.get(this.baseURL + 'location-mapping/positions', { headers: this.getHeaders(), params });
+        return this.http.get(
+            this.baseURL + 'location/warehouse/' + encodeURIComponent(whsCode) + '/row/' + encodeURIComponent(rowCode) + '/positions',
+            { headers: this.getHeaders() }
+        );
     }
 
-    validatePallet(payload: { palletQr: string; locationCode: string }): Observable<any> {
-        return this.http.post(this.baseURL + 'location-mapping/pallet/validate', payload, { headers: this.getHeaders() });
+    getPalletMapping(palletId: string): Observable<any> {
+        return this.http.get(this.baseURL + 'pallet-mapping/pallet/' + encodeURIComponent(palletId), { headers: this.getHeaders() });
     }
 
     mapLocation(payload: { palletId: string; whsCode: string; rowCode: string; locationCode: string }): Observable<any> {

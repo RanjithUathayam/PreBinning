@@ -17,19 +17,19 @@ export class PalletMappingApiService {
         return new HttpHeaders().set('authenticatetoken', token || '');
     }
 
-    validatePallet(payload: { palletQr: string }): Observable<any> {
+    validatePallet(payload: { palletId: string }): Observable<any> {
         return this.http.post(this.baseURL + 'pallet-mapping/pallet/validate', payload, { headers: this.getHeaders() });
     }
 
-    getPalletBoxes(palletId: string): Observable<any> {
-        return this.http.get(this.baseURL + 'pallet-mapping/pallet/' + encodeURIComponent(palletId) + '/boxes', { headers: this.getHeaders() });
+    getPalletMapping(palletId: string): Observable<any> {
+        return this.http.get(this.baseURL + 'pallet-mapping/pallet/' + encodeURIComponent(palletId), { headers: this.getHeaders() });
     }
 
-    scanBox(payload: { palletId: string; boxQr: string }): Observable<any> {
-        return this.http.post(this.baseURL + 'pallet-mapping/box/scan', payload, { headers: this.getHeaders() });
+    addBox(payload: { palletId: string; boxNumber: string }): Observable<any> {
+        return this.http.post(this.baseURL + 'pallet-mapping/box', payload, { headers: this.getHeaders() });
     }
 
     completePallet(payload: { palletId: string }): Observable<any> {
-        return this.http.post(this.baseURL + 'pallet-mapping/pallet/complete', payload, { headers: this.getHeaders() });
+        return this.http.post(this.baseURL + 'pallet-mapping/complete', payload, { headers: this.getHeaders() });
     }
 }

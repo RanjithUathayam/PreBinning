@@ -53,8 +53,8 @@ export class PalletMappingPage implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onPalletScanned(rawValue: string) {
-        const palletQr = (rawValue || '').trim();
-        if (this.scanning || !palletQr) {
+        const palletId = (rawValue || '').trim();
+        if (this.scanning || !palletId) {
             return;
         }
 
@@ -63,20 +63,21 @@ export class PalletMappingPage implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.scanning = true;
-        this.palletMappingApi.validatePallet({ palletQr }).subscribe({
+        this.palletMappingApi.validatePallet({ palletId }).subscribe({
             next: (res: any) => {
                 this.scanning = false;
                 if (res && res.success) {
                     const data = res.data || {};
-                    this.palletId = data.palletId || palletQr;
-                    this.palletStatus = data.status || 'IN PROGRESS';
+                    this.applyMapping(data, palletId);
                     this.isPalletScanned = true;
-                    this.currentPalletBoxes = [];
-                    this.setValidation('success', `Pallet ${this.palletId} scanned successfully.`);
-                    this.loadPalletBoxes(this.palletId as string);
+                    if (this.currentPalletBoxes.length > 0) {
+                        this.setValidation('success', `Pallet ${this.palletId} already has ${this.currentPalletBoxes.length} box(es) mapped. Continue scanning to add more.`);
+                    } else {
+                        this.setValidation('success', `Pallet ${this.palletId} scanned successfully.`);
+                    }
                     this.boxScanSection?.focusInput();
                 } else {
-                    this.setValidation('error', res?.message || 'Invalid Pallet QR.', () => this.palletScanSection?.focusInput());
+                    this.setValidation('error', this.messageForPalletError(res, palletId), () => this.palletScanSection?.focusInput());
                 }
             },
             error: (err: any) => {
@@ -86,29 +87,31 @@ export class PalletMappingPage implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    loadPalletBoxes(palletId: string) {
-        this.palletMappingApi.getPalletBoxes(palletId).subscribe({
-            next: (res: any) => {
-                if (res && res.success && res.data) {
-                    this.currentPalletBoxes = (res.data.boxes || []).map((b: any) => ({
-                        boxNumber: b.boxNumber,
-                        scanTime: b.scanTime || '',
-                        status: b.status || 'MAPPED'
-                    }));
-                    if (this.currentPalletBoxes.length > 0) {
-                        this.setValidation('success', `Pallet ${palletId} already has ${this.currentPalletBoxes.length} box(es) mapped. Continue scanning to add more.`);
-                    }
-                }
-            },
-            error: () => {
-                // non-fatal: backend couldn't return the resumed box list, keep locally tracked (empty) pallet state
-            }
-        });
+    private applyMapping(data: any, fallbackPalletId: string) {
+        this.palletId = data.palletId || fallbackPalletId;
+        this.palletStatus = data.status || 'OPEN';
+        this.currentPalletBoxes = (data.boxes || []).map((b: any) => ({
+            boxNumber: b.boxNumber,
+            warehouseCode: b.warehouseCode,
+            itemGroup: b.itemGroup,
+            boxTotalQty: b.boxTotalQty,
+            mappedBy: b.mappedBy,
+            mappedAt: b.mappedAt
+        }));
+    }
+
+    private messageForPalletError(res: any, palletId: string): string {
+        switch (res?.code) {
+            case 'PALLET_ALREADY_COMPLETED':
+                return res?.message || `Pallet ${palletId} has already been completed and cannot be reused.`;
+            default:
+                return res?.message || 'Invalid Pallet QR.';
+        }
     }
 
     onBoxScanned(rawValue: string) {
-        const boxQr = (rawValue || '').trim();
-        if (this.scanning || !boxQr) {
+        const boxNumber = (rawValue || '').trim();
+        if (this.scanning || !boxNumber) {
             return;
         }
 
@@ -117,29 +120,23 @@ export class PalletMappingPage implements OnInit, AfterViewInit, OnDestroy {
             return;
         }
 
-        const isDuplicateLocal = this.currentPalletBoxes.some((b) => b.boxNumber.toUpperCase() === boxQr.toUpperCase());
+        const isDuplicateLocal = this.currentPalletBoxes.some((b) => b.boxNumber.toUpperCase() === boxNumber.toUpperCase());
         if (isDuplicateLocal) {
-            this.setValidation('error', `Box ${boxQr} is already scanned in this pallet.`, () => this.boxScanSection?.focusInput());
+            this.setValidation('error', `Box ${boxNumber} is already scanned in this pallet.`, () => this.boxScanSection?.focusInput());
             return;
         }
 
         this.scanning = true;
-        this.palletMappingApi.scanBox({ palletId: this.palletId, boxQr }).subscribe({
+        this.palletMappingApi.addBox({ palletId: this.palletId, boxNumber }).subscribe({
             next: (res: any) => {
                 this.scanning = false;
                 if (res && res.success) {
-                    const data = res.data || {};
-                    const boxNumber = data.boxNumber || boxQr;
-                    this.currentPalletBoxes = [...this.currentPalletBoxes, {
-                        boxNumber,
-                        scanTime: this.formatTime(new Date()),
-                        status: data.status || 'MAPPED'
-                    }];
+                    this.applyMapping(res.data || {}, this.palletId as string);
                     this.showToast(`Box ${boxNumber} mapped successfully.`, 'success');
                     this.setValidation('success', 'Box mapped successfully.');
                     this.boxScanSection?.focusInput();
                 } else {
-                    this.setValidation('error', this.messageForBoxError(res, boxQr), () => this.boxScanSection?.focusInput());
+                    this.setValidation('error', this.messageForBoxError(res, boxNumber), () => this.boxScanSection?.focusInput());
                 }
             },
             error: (err: any) => {
@@ -149,16 +146,16 @@ export class PalletMappingPage implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    private messageForBoxError(res: any, boxQr: string): string {
+    private messageForBoxError(res: any, boxNumber: string): string {
         switch (res?.code) {
             case 'BOX_ALREADY_MAPPED':
-                return res?.message || `Box ${boxQr} is already mapped to another pallet.`;
-            case 'DUPLICATE_BOX_IN_PALLET':
-                return res?.message || `Box ${boxQr} is already scanned in this pallet.`;
+                return res?.message || `Box ${boxNumber} is already mapped to another pallet.`;
             case 'BOX_NOT_ELIGIBLE':
-                return res?.message || `Box ${boxQr} is not eligible for pallet mapping.`;
-            case 'INVALID_BOX':
-                return res?.message || `Invalid Box QR: ${boxQr}.`;
+                return res?.message || `Box ${boxNumber} has not completed Pre-Binning yet.`;
+            case 'BOX_NOT_FOUND':
+                return res?.message || `Box ${boxNumber} was not found.`;
+            case 'PALLET_NOT_OPEN':
+                return res?.message || 'No open pallet mapping found. Validate the pallet first.';
             default:
                 return res?.message || 'Box scan failed.';
         }
@@ -279,9 +276,5 @@ export class PalletMappingPage implements OnInit, AfterViewInit, OnDestroy {
             return 'Network error. Please check your connection. Your scanned boxes have not been lost.';
         }
         return err?.message || 'Something went wrong.';
-    }
-
-    private formatTime(date: Date): string {
-        return date.toLocaleTimeString('en-GB', { hour12: false });
     }
 }

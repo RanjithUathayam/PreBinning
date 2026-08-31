@@ -6,7 +6,7 @@
             <select class="form-control input-border-custom" [ngModel]="selectedWarehouse"
                 (ngModelChange)="onWarehouseChange($event)" [disabled]="disabled || loadingWarehouses">
                 <option [ngValue]="null" disabled>{{ loadingWarehouses ? 'Loading warehouses...' : 'Select Warehouse' }}</option>
-                <option *ngFor="let w of warehouseList" [ngValue]="w.whsCode">{{ w.whsCode }} - {{ w.whsName }}</option>
+                <option *ngFor="let w of warehouseList" [ngValue]="w.warehouseCode">{{ w.warehouseCode }} - {{ w.warehouseName }}</option>
             </select>
         </div>
         <div class="col-12 col-md-4 mb-2 mb-md-0">
