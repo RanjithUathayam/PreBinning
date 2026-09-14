@@ -12,6 +12,13 @@ export interface WarehouseStockItem {
     balanceQty: number;
 }
 
+// Valid formats: 20260911--0231 (8 digits, --, 4 digits) or 202608280111 (12 digits)
+const BOX_NUMBER_PATTERN = /^(\d{8}--\d{4}|\d{12})$/;
+
+export function isValidBoxNumber(raw: string): boolean {
+    return BOX_NUMBER_PATTERN.test(raw);
+}
+
 export interface ParsedItemQr {
     itemCode: string;
     type: string;

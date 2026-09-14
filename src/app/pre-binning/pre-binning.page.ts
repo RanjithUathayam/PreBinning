@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
 import { PreBinningApiService } from './services/pre-binning-api.service';
-import { CurrentBoxItem, ParsedItemQr, WarehouseOption, WarehouseStockItem, parseItemQr } from './pre-binning.types';
+import { CurrentBoxItem, ParsedItemQr, WarehouseOption, WarehouseStockItem, isValidBoxNumber, parseItemQr } from './pre-binning.types';
 import { BoxScanSectionComponent } from './components/box-scan-section/box-scan-section.component';
 import { ItemScanSectionComponent } from './components/item-scan-section/item-scan-section.component';
 
@@ -175,6 +175,11 @@ export class PreBinningPage implements OnInit, OnDestroy {
 
         if (!this.isWarehouseSelected || !this.selectedWarehouse) {
             this.setValidation('error', 'Please select a warehouse before continuing.');
+            return;
+        }
+
+        if (!isValidBoxNumber(boxQr)) {
+            this.setValidation('error', 'Invalid box number format.', () => this.boxScanSection?.focusInput());
             return;
         }
 
