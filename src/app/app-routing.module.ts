@@ -50,6 +50,10 @@ const routes: Routes = [
     path: 'location-mapping',
     loadChildren: () => import('./location-mapping/location-mapping.module').then( m => m.LocationMappingPageModule)
   },
+  {
+    path: 'picking',
+    loadChildren: () => import('./picking/picking.module').then( m => m.PickingPageModule)
+  },
 ];
 
 @NgModule({

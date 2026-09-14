@@ -1,0 +1,41 @@
+<div class="section-card">
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <label class="section-title mb-0">PALLET ITEMS</label>
+        <span class="total-count">Total: {{ items.length }} | Picked: {{ pickedCount }}</span>
+    </div>
+    <div class="table-responsive-wrapper mt-2">
+        <table class="table items-table">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Box Number</th>
+                    <th>Item Code</th>
+                    <th>Item Name</th>
+                    <th>Location</th>
+                    <th>Available</th>
+                    <th>Allocated</th>
+                    <th>Pickable</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!items || items.length === 0">
+                    <td colspan="9" class="text-center">No pickable items found under this pallet.</td>
+                </tr>
+                <tr *ngFor="let item of items; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.boxNumber }}</td>
+                    <td>{{ item.itemCode }}</td>
+                    <td>{{ item.itemName }}</td>
+                    <td>{{ item.locationCode }}</td>
+                    <td>{{ item.availableQty }}</td>
+                    <td>{{ item.allocatedQty }}</td>
+                    <td>{{ item.pickableQty }}</td>
+                    <td>
+                        <span class="status-pill" [ngClass]="item.pickingStatus === 'PICKED' ? 'picked' : 'pending'">{{ item.pickingStatus }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

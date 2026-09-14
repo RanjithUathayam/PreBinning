@@ -1,0 +1,64 @@
+<ion-header>
+    <ion-toolbar>
+        <app-pageheader [title]="'PICKING'"></app-pageheader>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <div class="container-fluid p-2">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="header-meta d-flex flex-wrap justify-content-between align-items-center mb-2">
+                    <div class="meta-item">
+                        <span class="label">User</span>
+                        <span class="value">{{ currentUser }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Station</span>
+                        <span class="value">{{ selectedStation }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Date / Time</span>
+                        <span class="value">{{ currentDateTime | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                    </div>
+                </div>
+
+                <div class="validation-banner mb-3" *ngIf="validationMessage" [ngClass]="validationLevel">
+                    {{ validationMessage }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <app-pk-pallet-scan-section [disabled]="scanning" [scanning]="scanning" [locked]="isPalletScanned"
+                    [palletNumber]="palletNumber" [pickingStatus]="pickingStatus" [totalItems]="items.length"
+                    [pickedItems]="pickedItemCount" (palletScanned)="onPalletScanned($event)"
+                    (changePallet)="changePallet()">
+                </app-pk-pallet-scan-section>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <app-pk-box-scan-section [disabled]="!isPalletScanned || pickingStatus === 'COMPLETED' || scanning"
+                    [scanning]="scanning" (boxScanned)="onBoxScanned($event)"></app-pk-box-scan-section>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <app-pk-box-items-grid [boxNumber]="currentBoxNumber" [items]="currentBoxItems" [scanning]="scanning"
+                    [boxRemainingQty]="currentBoxRemainingQty" [boxPickingStatus]="currentBoxPickingStatus"
+                    (pickItem)="onPickItem($event)"></app-pk-box-items-grid>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <app-pk-pallet-items-grid [items]="items"></app-pk-pallet-items-grid>
+            </div>
+        </div>
+
+    </div>
+</ion-content>

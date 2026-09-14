@@ -1,0 +1,66 @@
+.section-card {
+    background-color: white;
+    border: 1px solid rgb(102 102 102 / 25%);
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.section-title {
+    color: #14304d;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.total-count {
+    color: #003F5E;
+    font-weight: 700;
+}
+
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.items-table {
+    width: 100%;
+    min-width: 640px;
+    margin-bottom: 0;
+}
+
+.items-table th {
+    color: white;
+    background-color: #14304d;
+    font-size: 13px;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+}
+
+.items-table td {
+    color: #003F5E;
+    font-size: 13px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.status-pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-pill.picked {
+    background-color: #e1f5e6;
+    color: #1a7a34;
+    border: 1px solid #1a7a34;
+}
+
+.status-pill.pending {
+    background-color: #fff6e0;
+    color: #9a6b00;
+    border: 1px solid #9a6b00;
+}
