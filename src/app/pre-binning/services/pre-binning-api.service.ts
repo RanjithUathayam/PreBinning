@@ -36,7 +36,7 @@ export class PreBinningApiService {
         return this.http.post(this.baseURL + 'pre-binning/box/validate', payload, { headers: this.getHeaders() });
     }
 
-    scanItem(payload: { boxNumber: string; itemCode: string; type: string; grnNo: string; itemGroup: string; uniqueNumber: string; qty: number; whsCode: string }): Observable<any> {
+    scanItem(payload: { boxNumber: string; itemCode: string; type: string; grnNo: string; itemGroup: string; uniqueNumber: string; qty: number; whsCode: string; confirmNewItem?: boolean }): Observable<any> {
         return this.http.post(this.baseURL + 'pre-binning/item/scan', payload, { headers: this.getHeaders() });
     }
 

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
 import { PreBinningApiService } from './services/pre-binning-api.service';
-import { CurrentBoxItem, WarehouseOption, WarehouseStockItem, parseItemQr } from './pre-binning.types';
+import { CurrentBoxItem, ParsedItemQr, WarehouseOption, WarehouseStockItem, parseItemQr } from './pre-binning.types';
 import { BoxScanSectionComponent } from './components/box-scan-section/box-scan-section.component';
 import { ItemScanSectionComponent } from './components/item-scan-section/item-scan-section.component';
 
@@ -266,8 +266,7 @@ export class PreBinningPage implements OnInit, OnDestroy {
 
         // Unique Number is not, by itself, a valid duplicate key (ItemCode + GRNNo + UniqueNumber is) —
         // the backend is the sole authority on whether this combination has already been scanned.
-        this.scanning = true;
-        this.preBinningApi.scanItem({
+        this.submitItemScan({
             boxNumber: this.currentBox,
             itemCode: parsed.itemCode,
             type: parsed.type,
@@ -276,7 +275,15 @@ export class PreBinningPage implements OnInit, OnDestroy {
             uniqueNumber: parsed.uniqueNumber,
             qty: parsed.qty,
             whsCode: this.selectedWarehouse as string
-        }).subscribe({
+        }, parsed);
+    }
+
+    private submitItemScan(
+        payload: { boxNumber: string; itemCode: string; type: string; grnNo: string; itemGroup: string; uniqueNumber: string; qty: number; whsCode: string; confirmNewItem?: boolean },
+        parsed: ParsedItemQr
+    ) {
+        this.scanning = true;
+        this.preBinningApi.scanItem(payload).subscribe({
             next: (res: any) => {
                 this.scanning = false;
                 if (res && res.success) {
@@ -284,7 +291,10 @@ export class PreBinningPage implements OnInit, OnDestroy {
                     this.currentBoxItems = [...this.currentBoxItems, { ...parsed, scanTime: this.formatTime(new Date()) }];
                     this.currentBoxItemGroup = this.currentBoxItemGroup || parsed.itemGroup;
                     this.currentBoxQty = data.boxTotalQty ?? (this.currentBoxQty + parsed.qty);
-                    this.showToast(`Item Added Successfully — ${parsed.itemCode} / Unique No: ${parsed.uniqueNumber} / Qty: ${parsed.qty}`, 'success');
+                    const message = data.isNewItemInWarehouse
+                        ? `Item Added as New Warehouse Item — ${parsed.itemCode} / Unique No: ${parsed.uniqueNumber} / Qty: ${parsed.qty}`
+                        : `Item Added Successfully — ${parsed.itemCode} / Unique No: ${parsed.uniqueNumber} / Qty: ${parsed.qty}`;
+                    this.showToast(message, 'success');
                     this.setValidation('success', 'Item added successfully.');
                     this.loadWarehouseStock();
                     this.itemScanSection?.focusInput();
@@ -296,6 +306,10 @@ export class PreBinningPage implements OnInit, OnDestroy {
             },
             error: (err: any) => {
                 this.scanning = false;
+                if (err?.error?.code === 'ITEM_NOT_AVAILABLE' && !payload.confirmNewItem) {
+                    this.presentItemNotAvailableAlert(payload, parsed);
+                    return;
+                }
                 const msg = this.extractErrorMessage(err);
                 this.setValidation('error', msg, () => this.itemScanSection?.focusInput());
                 if (err?.status === 409) {
@@ -303,6 +317,30 @@ export class PreBinningPage implements OnInit, OnDestroy {
                 }
             }
         });
+    }
+
+    private async presentItemNotAvailableAlert(
+        payload: { boxNumber: string; itemCode: string; type: string; grnNo: string; itemGroup: string; uniqueNumber: string; qty: number; whsCode: string },
+        parsed: ParsedItemQr
+    ) {
+        const alert = await this.alertController.create({
+            header: `Item ${payload.itemCode} is not available in warehouse ${payload.whsCode}.`,
+            message: 'This item has no existing stock in this warehouse. Add it as a new item for this warehouse and continue scanning?',
+            buttons: [
+                {
+                    text: 'CANCEL',
+                    cssClass: 'alert-button-inline',
+                    handler: () => this.itemScanSection?.focusInput()
+                },
+                {
+                    text: 'ADD AS NEW ITEM',
+                    cssClass: 'alert-button-inline',
+                    handler: () => this.submitItemScan({ ...payload, confirmNewItem: true }, parsed)
+                }
+            ],
+            cssClass: 'custom-alert'
+        });
+        await alert.present();
     }
 
     async completeBox() {
