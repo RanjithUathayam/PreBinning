@@ -1,0 +1,117 @@
+<div class="section-card">
+    <label class="section-title">TRANSACTION HISTORY</label>
+
+    <div class="row filter-row mt-2">
+        <div class="col-6 col-md-2 mb-2">
+            <span class="label">Type</span>
+            <select class="form-control" [(ngModel)]="filters.mode">
+                <option value="">All</option>
+                <option value="STORE">Store</option>
+                <option value="PICK">Picking</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-2 mb-2">
+            <span class="label">Warehouse</span>
+            <select class="form-control" [(ngModel)]="filters.whsCode">
+                <option value="">All</option>
+                <option *ngFor="let w of warehouses" [value]="w.warehouseCode">{{ w.warehouseCode }}</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-2 mb-2">
+            <span class="label">From</span>
+            <input type="date" class="form-control" [(ngModel)]="filters.fromDate" />
+        </div>
+        <div class="col-6 col-md-2 mb-2">
+            <span class="label">To</span>
+            <input type="date" class="form-control" [(ngModel)]="filters.toDate" />
+        </div>
+        <div class="col-6 col-md-2 mb-2">
+            <span class="label">Rack Code</span>
+            <input type="text" class="form-control" [(ngModel)]="filters.rackCode" autocomplete="off" />
+        </div>
+        <div class="col-6 col-md-2 mb-2">
+            <span class="label">Item Code</span>
+            <input type="text" class="form-control" [(ngModel)]="filters.itemCode" autocomplete="off" />
+        </div>
+        <div class="col-12 col-md-2 mb-2 d-flex align-items-end">
+            <button type="button" class="btn btn-style w-100" [disabled]="loading" (click)="search(1)">
+                {{ loading ? 'Loading...' : 'Search' }}
+            </button>
+        </div>
+    </div>
+
+    <div class="error-text" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <div class="table-responsive-wrapper mt-2">
+        <table class="table items-table">
+            <thead>
+                <tr>
+                    <th>Txn No</th>
+                    <th>Type</th>
+                    <th>Warehouse</th>
+                    <th>Rack Code</th>
+                    <th>Lines</th>
+                    <th>Total Qty</th>
+                    <th>User</th>
+                    <th>Device</th>
+                    <th>Date / Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!loading && rows.length === 0">
+                    <td colspan="9" class="text-center">No transactions found.</td>
+                </tr>
+                <ng-container *ngFor="let row of rows">
+                    <tr class="clickable" (click)="toggle(row)">
+                        <td>{{ expandedId === row.transactionId ? '▾' : '▸' }} {{ row.transactionNo }}</td>
+                        <td><span class="status-pill" [ngClass]="row.mode === 'STORE' ? 'store' : 'pick'">{{ row.mode === 'STORE' ? 'STORE' : 'PICK' }}</span></td>
+                        <td>{{ row.warehouseCode }}</td>
+                        <td>{{ row.rackCode }}</td>
+                        <td>{{ row.totalLines }}</td>
+                        <td>{{ row.totalQty }}</td>
+                        <td>{{ row.createdBy }}</td>
+                        <td>{{ row.deviceId || '-' }}</td>
+                        <td>{{ row.createdAt | date:'dd-MM-yyyy HH:mm:ss' }}</td>
+                    </tr>
+                    <tr *ngIf="expandedId === row.transactionId" class="detail-row">
+                        <td colspan="9">
+                            <div *ngIf="detailLoading" class="text-muted">Loading lines...</div>
+                            <table class="table detail-table mb-0" *ngIf="!detailLoading && detailLines.length > 0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Item Code</th>
+                                        <th>Item Name</th>
+                                        <th>GRN / Unique No</th>
+                                        <th>Qty</th>
+                                        <th>Before</th>
+                                        <th>After</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let line of detailLines">
+                                        <td>{{ line.lineNum }}</td>
+                                        <td>{{ line.itemCode }}</td>
+                                        <td>{{ line.itemName || '-' }}</td>
+                                        <td>{{ line.grnNo ? line.grnNo + ' / ' + line.uniqueNumber : '—' }}</td>
+                                        <td>{{ line.qty }}</td>
+                                        <td>{{ line.qtyBefore }}</td>
+                                        <td>{{ line.qtyAfter }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-2" *ngIf="total > 0">
+        <span class="total-count">Page {{ page }} of {{ totalPages }} ({{ total }} transactions)</span>
+        <div>
+            <button type="button" class="btn btn-cancel-style mr-2" [disabled]="loading || page <= 1" (click)="search(page - 1)">Prev</button>
+            <button type="button" class="btn btn-cancel-style" [disabled]="loading || page >= totalPages" (click)="search(page + 1)">Next</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="section-card">
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <label class="section-title mb-0">{{ mode === 'PICK' ? 'ITEMS TO PICK' : 'ITEMS TO STORE' }} — REVIEW</label>
+        <span class="total-count">Lines: {{ lines.length }} | Total Qty: {{ totalQty }}</span>
+    </div>
+    <div class="table-responsive-wrapper mt-2">
+        <table class="table items-table">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Rack Code</th>
+                    <th>Item Code</th>
+                    <th>Item Name</th>
+                    <th>GRN / Unique No</th>
+                    <th>{{ mode === 'PICK' ? 'Available Qty' : 'Rack Qty' }}</th>
+                    <th>{{ mode === 'PICK' ? 'Pick Qty' : 'Store Qty' }}</th>
+                    <th>Rack Qty After</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!lines || lines.length === 0">
+                    <td colspan="9" class="text-center">Scan item QR codes to add them here.</td>
+                </tr>
+                <tr *ngFor="let line of lines; let i = index; trackBy: trackByKey" [class.row-error]="lineErrors[line.key]">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ rackCode }}</td>
+                    <td>{{ line.itemCode }}</td>
+                    <td>{{ line.itemName || '-' }}</td>
+                    <td>
+                        <ng-container *ngIf="line.tagged; else untagged">{{ line.grnNo }} / {{ line.uniqueNumber }}</ng-container>
+                        <ng-template #untagged><span class="text-muted">—</span></ng-template>
+                    </td>
+                    <td>{{ line.availableQty }}</td>
+                    <td>
+                        <input *ngIf="!line.tagged; else fixedQty" type="number" class="form-control qty-input" min="0.001" step="1"
+                            [disabled]="saving" [value]="line.qty" (change)="onQtyChange(line, $any($event.target).value)" />
+                        <ng-template #fixedQty>{{ line.qty }}</ng-template>
+                        <div class="line-error" *ngIf="lineErrors[line.key]">{{ lineErrors[line.key] }}</div>
+                    </td>
+                    <td>{{ projectedQtyByItem[line.itemCode] }}</td>
+                    <td>
+                        <button type="button" class="btn btn-remove" [disabled]="saving" (click)="removeLine.emit(line)">Remove</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="d-flex justify-content-end flex-wrap mt-3 action-row">
+        <button type="button" class="btn btn-cancel-style mr-2" [disabled]="saving || lines.length === 0" (click)="clear.emit()">Clear</button>
+        <button type="button" class="btn btn-style save-btn" [disabled]="saving || !canSave" (click)="save.emit()">
+            {{ saving ? 'Saving...' : (mode === 'PICK' ? 'Save Picking' : 'Save Store') }}
+        </button>
+    </div>
+</div>

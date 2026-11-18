@@ -1,0 +1,11 @@
+<div class="section-card">
+    <label class="section-title">{{ mode === 'PICK' ? 'SCAN ITEM TO PICK' : 'SCAN ITEM TO STORE' }}</label>
+    <div class="d-flex flex-wrap align-items-center scan-row mt-2">
+        <input #itemInput type="text" class="form-control input-border-custom scan-input"
+            [placeholder]="disabled ? 'Scan the Rack QR code first' : 'Scan / Enter Item QR Code'"
+            [disabled]="disabled" (keyup.enter)="onEnter($event)" autocomplete="off" />
+        <button type="button" class="btn btn-style ml-sm-2 mt-2 mt-sm-0" [disabled]="disabled" (click)="onScanButtonClick()">
+            {{ scanning ? 'Scanning...' : 'Scan Item' }}
+        </button>
+    </div>
+</div>

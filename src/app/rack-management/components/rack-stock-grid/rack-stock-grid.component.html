@@ -1,0 +1,33 @@
+<div class="section-card">
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <label class="section-title mb-0">RACK {{ rackCode || '-' }} — CURRENT STOCK</label>
+        <span class="total-count">Items: {{ stock.length }} | Qty: {{ totalQty }}</span>
+    </div>
+    <div class="table-responsive-wrapper mt-2">
+        <table class="table items-table">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Item Code</th>
+                    <th>Item Name</th>
+                    <th>Item Group</th>
+                    <th>Quantity</th>
+                    <th>Last Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!stock || stock.length === 0">
+                    <td colspan="6" class="text-center">{{ rackCode ? 'This rack is empty.' : 'Scan a rack to view its stock.' }}</td>
+                </tr>
+                <tr *ngFor="let row of stock; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ row.itemCode }}</td>
+                    <td>{{ row.itemName || '-' }}</td>
+                    <td>{{ row.itemGroup || '-' }}</td>
+                    <td>{{ row.quantity }}</td>
+                    <td>{{ row.updatedAt | date:'dd-MM-yyyy HH:mm' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

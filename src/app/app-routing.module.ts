@@ -54,6 +54,10 @@ const routes: Routes = [
     path: 'picking',
     loadChildren: () => import('./picking/picking.module').then( m => m.PickingPageModule)
   },
+  {
+    path: 'rack-management',
+    loadChildren: () => import('./rack-management/rack-management.module').then( m => m.RackManagementPageModule)
+  },
 ];
 
 @NgModule({

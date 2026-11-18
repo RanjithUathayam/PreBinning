@@ -1,0 +1,110 @@
+.section-card {
+    background-color: white;
+    border: 1px solid rgb(102 102 102 / 25%);
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.section-title {
+    color: #14304d;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.label {
+    color: #14304d;
+    font-size: 12px;
+    text-transform: uppercase;
+    display: block;
+}
+
+.total-count {
+    color: #003F5E;
+    font-weight: 700;
+}
+
+.error-text {
+    color: #c0392b;
+    font-weight: 600;
+}
+
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.items-table {
+    width: 100%;
+    min-width: 720px;
+    margin-bottom: 0;
+}
+
+.items-table > thead th {
+    color: white;
+    background-color: #14304d;
+    font-size: 13px;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+}
+
+.items-table td {
+    color: #003F5E;
+    font-size: 13px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.detail-row > td {
+    background-color: #EFF7FA;
+}
+
+.detail-table th {
+    color: #14304d;
+    background-color: #dbe9f0;
+    font-size: 12px;
+}
+
+.btn-style {
+    background-color: #14304d !important;
+    color: white;
+    font-weight: 600;
+    white-space: nowrap;
+    border-radius: 40px;
+}
+
+.btn-cancel-style {
+    background-color: white !important;
+    color: #14304d;
+    border: 1px solid #14304d !important;
+    font-weight: 600;
+    white-space: nowrap;
+    border-radius: 40px;
+    padding: 4px 16px;
+}
+
+.status-pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-pill.store {
+    background-color: #e1f5e6;
+    color: #1a7a34;
+    border: 1px solid #1a7a34;
+}
+
+.status-pill.pick {
+    background-color: #fff6e0;
+    color: #9a6b00;
+    border: 1px solid #9a6b00;
+}

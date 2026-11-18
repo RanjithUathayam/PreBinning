@@ -1,0 +1,85 @@
+<ion-header>
+    <ion-toolbar>
+        <app-pageheader [title]="'RACK MANAGEMENT'"></app-pageheader>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <div class="container-fluid p-2">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="header-meta d-flex flex-wrap justify-content-between align-items-center mb-2">
+                    <div class="meta-item">
+                        <span class="label">User</span>
+                        <span class="value">{{ currentUser }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Station</span>
+                        <span class="value">{{ selectedStation }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Date / Time</span>
+                        <span class="value">{{ currentDateTime | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                    </div>
+                </div>
+
+                <div class="mode-tabs d-flex mb-2">
+                    <button type="button" class="mode-tab" [class.active]="activeTab === 'STORE'" [disabled]="saving"
+                        (click)="selectTab('STORE')">STORE</button>
+                    <button type="button" class="mode-tab" [class.active]="activeTab === 'PICK'" [disabled]="saving"
+                        (click)="selectTab('PICK')">PICKING</button>
+                    <button type="button" class="mode-tab" [class.active]="activeTab === 'HISTORY'" [disabled]="saving"
+                        (click)="selectTab('HISTORY')">HISTORY</button>
+                </div>
+
+                <div class="validation-banner mb-3" *ngIf="validationMessage && activeTab !== 'HISTORY'" [ngClass]="validationLevel">
+                    {{ validationMessage }}
+                </div>
+            </div>
+        </div>
+
+        <div [hidden]="activeTab === 'HISTORY'">
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <app-rm-rack-scan-section [disabled]="scanning || saving" [scanning]="scanning" [locked]="isRackScanned"
+                        [rack]="rack" [stockItemCount]="stock.length" [stockTotalQty]="stockTotalQty"
+                        [warehouses]="warehouses" [selectedWarehouse]="selectedWarehouse" [loadingWarehouses]="loadingWarehouses"
+                        (warehouseChange)="onWarehouseChange($event)"
+                        (rackScanned)="onRackScanned($event)" (changeRack)="changeRack()">
+                    </app-rm-rack-scan-section>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <app-rm-item-scan-section [disabled]="!isRackScanned || scanning || saving" [scanning]="scanning" [mode]="mode"
+                        (itemScanned)="onItemScanned($event)"></app-rm-item-scan-section>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <app-rm-scanned-items-grid [mode]="mode" [rackCode]="rack?.rackCode || null" [lines]="lines"
+                        [lineErrors]="lineErrors" [projectedQtyByItem]="projectedQtyByItem" [totalQty]="totalQty"
+                        [canSave]="canSave" [saving]="saving" (qtyChange)="onQtyChange($event)"
+                        (removeLine)="onRemoveLine($event)" (save)="onSave()" (clear)="onClearLines()">
+                    </app-rm-scanned-items-grid>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <app-rm-rack-stock-grid [rackCode]="rack?.rackCode || null" [stock]="stock" [totalQty]="stockTotalQty">
+                    </app-rm-rack-stock-grid>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="activeTab === 'HISTORY'">
+            <div class="col-12 mb-3">
+                <app-rm-rack-history [mode]="''" [warehouses]="warehouses" [whsCode]="selectedWarehouse"></app-rm-rack-history>
+            </div>
+        </div>
+
+    </div>
+</ion-content>

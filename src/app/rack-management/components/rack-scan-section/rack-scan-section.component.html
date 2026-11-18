@@ -1,0 +1,51 @@
+<div class="section-card">
+    <div class="row">
+        <div class="col-12 col-md-5 mb-2">
+            <label class="section-title">WAREHOUSE</label>
+            <select class="form-control input-border-custom mt-2" [ngModel]="selectedWarehouse"
+                (ngModelChange)="warehouseChange.emit($event)" [disabled]="locked || scanning || loadingWarehouses">
+                <option [ngValue]="null" disabled>{{ loadingWarehouses ? 'Loading warehouses...' : (warehouses.length === 0 ? 'No warehouses with racks' : 'Select Warehouse') }}</option>
+                <option *ngFor="let w of warehouses" [ngValue]="w.warehouseCode">{{ w.warehouseCode }} - {{ w.warehouseName }}</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-7 mb-2" *ngIf="!locked">
+            <label class="section-title">RACK QR CODE</label>
+            <div class="d-flex flex-wrap align-items-center scan-row mt-2">
+                <input #rackInput type="text" class="form-control input-border-custom scan-input"
+                    [placeholder]="selectedWarehouse ? placeholder : 'Select a warehouse first'"
+                    [disabled]="disabled || !selectedWarehouse" (keyup.enter)="onEnter($event)" autocomplete="off" />
+                <button type="button" class="btn btn-style ml-sm-2 mt-2 mt-sm-0" [disabled]="disabled || !selectedWarehouse" (click)="onScanButtonClick()">
+                    {{ scanning ? 'Scanning...' : 'Scan Rack' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="pallet-summary mt-2" *ngIf="locked && rack">
+        <div class="row">
+            <div class="col-6 col-md-3 summary-item">
+                <span class="label">Rack Code</span>
+                <span class="value">{{ rack.rackCode }}</span>
+            </div>
+            <div class="col-6 col-md-2 summary-item">
+                <span class="label">Warehouse / Row</span>
+                <span class="value">{{ rack.warehouseCode }} / {{ rack.rowCode }}</span>
+            </div>
+            <div class="col-6 col-md-2 summary-item">
+                <span class="label">Items In Rack</span>
+                <span class="value">{{ stockItemCount }}</span>
+            </div>
+            <div class="col-6 col-md-2 summary-item">
+                <span class="label">Qty In Rack</span>
+                <span class="value">{{ stockTotalQty }}</span>
+            </div>
+            <div class="col-12 col-md-3 d-flex align-items-center justify-content-md-end">
+                <button type="button" class="btn btn-cancel-style" [disabled]="scanning" (click)="onChangeRackClick()">Change Rack</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="pallet-summary mt-2" *ngIf="!locked">
+        <span class="text-muted">{{ selectedWarehouse ? 'No rack scanned yet. Scan the Rack QR code to begin.' : 'Select a warehouse, then scan the Rack QR code.' }}</span>
+    </div>
+</div>

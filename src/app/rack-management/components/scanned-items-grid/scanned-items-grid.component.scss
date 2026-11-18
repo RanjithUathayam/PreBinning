@@ -1,0 +1,110 @@
+.section-card {
+    background-color: white;
+    border: 1px solid rgb(102 102 102 / 25%);
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.section-title {
+    color: #14304d;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.total-count {
+    color: #003F5E;
+    font-weight: 700;
+}
+
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.items-table {
+    width: 100%;
+    min-width: 760px;
+    margin-bottom: 0;
+}
+
+.items-table th {
+    color: white;
+    background-color: #14304d;
+    font-size: 13px;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+}
+
+.items-table td {
+    color: #003F5E;
+    font-size: 13px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.row-error td {
+    background-color: #fdeaea;
+}
+
+.line-error {
+    color: #c0392b;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: normal;
+    max-width: 180px;
+}
+
+.qty-input {
+    width: 90px;
+    display: inline-block;
+}
+
+.btn-style {
+    background-color: #14304d !important;
+    color: white;
+    font-weight: 600;
+    white-space: nowrap;
+    border-radius: 40px;
+}
+
+.save-btn {
+    padding: 6px 24px;
+}
+
+.save-btn:disabled {
+    opacity: 0.5;
+}
+
+.btn-cancel-style {
+    background-color: white !important;
+    color: #c0392b;
+    border: 1px solid #c0392b !important;
+    font-weight: 600;
+    white-space: nowrap;
+    border-radius: 40px;
+    padding: 6px 16px;
+}
+
+.btn-remove {
+    background-color: white !important;
+    color: #c0392b;
+    border: 1px solid #c0392b !important;
+    border-radius: 40px;
+    padding: 2px 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+@media (max-width: 576px) {
+    .action-row {
+        flex-direction: column-reverse;
+    }
+
+    .action-row .btn {
+        width: 100%;
+        margin: 4px 0 !important;
+    }
+}
