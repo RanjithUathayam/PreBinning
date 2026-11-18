@@ -13,7 +13,7 @@
                             <select class="form-select form-control custom-select pl-1 pr-0 py-1 mr-2" [(ngModel)]="selectedGrnNo" [disabled]="isGrnSelected"
                             aria-label="Default select example" (input)="selectedGrnumber($event)">
                             <option value="" disabled selected></option>
-                            <option *ngFor="let data of grnlist" [value]="data">{{ data }}</option>
+                            <option *ngFor="let data of grnlist" [value]="data.GRNNo">{{ data.GRNNo }}{{ data.Year ? '/' + data.Year : '' }}</option>
                             </select>
                             <a class="custom-link no-wrap ml-auto text-end refresh_icon ml-2">
                             <div class="icon-container">
@@ -33,9 +33,9 @@
                                 <div class="row">
                                 <div class="col-md-6 col-sm-6 col-12 d-flex align-items-center no-wrap">
                                     <label class="text-color1 mb-2">GRN No : </label>
-                                    <label class="text-value-color mb-2 font-weight-bold">{{ grndataArr[0]?.GRNNo }}</label>
+                                    <label class="text-value-color mb-2 font-weight-bold">{{ grndataArr[0]?.GRNNo }}{{ getGrnYear(grndataArr[0]?.DocNo) ? '/' + getGrnYear(grndataArr[0]?.DocNo) : '' }}</label>
                                 </div>
-                                <div class="col-md-6 col-sm-6 col-12 d-flex align-items-center no-wrap p-0">
+                                <div class="col-md-6 col-sm-6 col-12 d-flex align-items-center no-wrap">
                                     <label class="text-color1 mb-2">Type : </label>
                                     <label class="text-value-color mb-2 font-weight-bold">{{ grndataArr[0]?.Type }}</label>
                                 </div>
@@ -224,7 +224,7 @@
     </ion-header>
     <ion-content>
     <div class="fixed-grn mt-2 ">
-        <span class="text-color"> GRN NO : {{ selectedGrnNo }}</span>
+        <span class="text-color"> GRN NO : {{ selectedGrnNo }}{{ getGrnYear(grndataArr[0]?.DocNo) ? '/' + getGrnYear(grndataArr[0]?.DocNo) : '' }}</span>
     </div>
     <div class="scrollbar-container1">
         <div class="grn_cardview position-relative">

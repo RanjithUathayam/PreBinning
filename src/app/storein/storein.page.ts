@@ -40,6 +40,12 @@ export class StoreinPage implements OnInit, AfterViewInit {
     private html5Qrcode: Html5Qrcode | null = null;
     camSet: number = 0;
     grnlist: any;
+
+    /** Financial year from a DocNo such as "4424/FY2627" -> "FY2627" (empty if none). */
+    getGrnYear(docNo: any): string {
+        const doc = (docNo ?? '').toString();
+        return doc.includes('/') ? doc.split('/').pop()!.trim() : '';
+    }
     remarkslist:any=[]
     selectedGrnNo: any;              // to store the selected grn no
     grndataArr: any[] = []           // main array to store the grn data
@@ -774,7 +780,8 @@ export class StoreinPage implements OnInit, AfterViewInit {
         this.apiservice?.GetGrnList().subscribe(
             (res: any) => {
                 if (res && res.status === 1) {
-                    this.grnlist = res.data;  // Store data from the API to grnlist
+                    // List of { GRNNo, Year }: GRNNo is the selected value, GRNNo/Year is what the user sees
+                    this.grnlist = res.grnDocs ?? (res.data || []).map((grn: any) => ({ GRNNo: grn, Year: '' }));
                     this.remarkslist = res.remarks;  // Store remarks from the API to remarkslist
                 } else {
                     this.presentAlert(res.message, '');
